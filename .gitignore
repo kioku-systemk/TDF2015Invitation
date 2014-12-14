@@ -1,1 +1,46 @@
+#
+# Ignore list: http://kleber-swf.com/the-definitive-gitignore-for-unity-projects/
+#
+
+# =============== #
+# Unity generated #
+# =============== #
+[Bb]uild
+[Ll]ibrary/
+[Oo]bj/
+[Tt]emp/
+
+# Unity3D Generated File On Crash Reports
+sysinfo.txt
+
+
+# ===================================== #
+# Visual Studio / MonoDevelop generated #
+# ===================================== #
+[Ee]xported[Oo]bj/
+/*.booproj
+/*.csproj
+/*.pidb
+/*.sln*
+/*.suo
+/*.unityproj
+/*.user
+/*.userprefs
+
+
+# ============ #
+# OS generated #
+# ============ #
+.DS_Store*
+.Spotlight-V100
+.Trashes
+._*
+Icon?
+[Tt]humbs.db
+ehthumbs.db
+
+
+# ===== #
+# Other #
+# ===== #
 *.swp
