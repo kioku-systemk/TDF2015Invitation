@@ -1,6 +1,12 @@
 using UnityEngine;
 using System.Collections;
 
+//
+// Hash class.
+//
+// Written after: http://catlikecoding.com/unity/tutorials/noise/
+//
+
 public static class Hash {
 	private static int[] hash = {
 		151,160,137, 91, 90, 15,131, 13,201, 95, 96, 53,194,233,  7,225,
