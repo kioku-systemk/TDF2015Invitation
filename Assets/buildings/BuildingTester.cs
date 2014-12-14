@@ -37,7 +37,32 @@ public class BuildingTester : MonoBehaviour {
 
 	private Mesh mesh = null;
 
+	private int hash = 0;
+
+	public override int GetHashCode() {
+	  var hash = 0;
+		hash = (patch_width.GetHashCode() + hash).GetHashCode();
+		hash = (patch_length.GetHashCode() + hash).GetHashCode();
+		hash = (block_width.GetHashCode() + hash).GetHashCode();
+		hash = (block_length.GetHashCode() + hash).GetHashCode();
+		hash = (street_width.GetHashCode() + hash).GetHashCode();
+		hash = (cell_width.GetHashCode() + hash).GetHashCode();
+		hash = (cell_length.GetHashCode() + hash).GetHashCode();
+		hash = (average_height.GetHashCode() + hash).GetHashCode();
+		hash = (noise.GetHashCode() + hash).GetHashCode();
+		hash = (style_A.GetHashCode() + hash).GetHashCode();
+		hash = (style_B.GetHashCode() + hash).GetHashCode();
+		return hash;
+	}
+
+
 	private void Create() {
+		var newHash = GetHashCode();
+		if (hash == newHash) {
+			return;
+ 		}
+		hash = newHash;
+
 		mesh = new Mesh();
 		City.GeneratePatch(mesh,
 		                   patch_width, patch_length,
