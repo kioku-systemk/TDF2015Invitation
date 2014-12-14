@@ -1,20 +1,27 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 [RequireComponent(typeof(MeshFilter))]
 public class BuildingTester : MonoBehaviour {
-	public int parameter = 0;
+	[Range(1, 50)]
+	public int patch_width = 10;
 
-	[Range(2, 50)]
-	public int grid_width = 10;
+	[Range(1, 50)]
+	public int patch_length = 10;
 
-	[Range(2, 50)]
-	public int grid_length = 10;
-	
+	[Range(1, 50)]
+	public int block_width = 2;
+
+	[Range(1, 50)]
+	public int block_length = 4;
+
+	[Range(2.0f, 50.0f)]
+	public float street_width = 8.0f;
+
 	[Range(2.0f, 100.0f)]
-	public float max_base_width = 10.0f;
+	public float cell_width = 10.0f;
 
 	[Range(2.0f, 100.0f)]
-	public float max_base_length = 10.0f;
+	public float cell_length = 10.0f;
 
 	[Range(3.0f, 100.0f)]
 	public float average_height = 15.0f;
@@ -30,19 +37,13 @@ public class BuildingTester : MonoBehaviour {
 
 	private Mesh mesh = null;
 
-	private void Create()
-	{
+	private void Create() {
 		mesh = new Mesh();
-		CombineInstance[] combine = new CombineInstance[grid_width * grid_length];
-		for (var j = 0; j < grid_length; ++j) {
-			for (var i = 0; i < grid_width; ++i) {
-				Random.seed = Hash.Get(Hash.Get(i) + j);
-				int index = i + j * grid_width;
-				combine[index].mesh = Building.Generate(average_height, max_base_width, max_base_length, noise, new Vector2(style_A, style_B));
-				combine[index].transform = Extensions.TranslationMatrix(max_base_width * i, 0.0f, max_base_length * j);
-			}
-		}
-		mesh.CombineMeshes(combine);
+		City.GeneratePatch(mesh,
+		                   patch_width, patch_length,
+		                   block_width, block_length,
+		                   street_width, cell_width, cell_length, average_height,
+		                   noise, style_A, style_B);
 		GetComponent<MeshFilter>().mesh = mesh;
 	}
 
