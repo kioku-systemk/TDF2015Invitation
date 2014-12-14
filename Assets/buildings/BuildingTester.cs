@@ -32,12 +32,11 @@ public class BuildingTester : MonoBehaviour {
 
 	private void Create()
 	{
-		Random.seed = 0;
-
 		mesh = new Mesh();
 		CombineInstance[] combine = new CombineInstance[grid_width * grid_length];
 		for (var j = 0; j < grid_length; ++j) {
 			for (var i = 0; i < grid_width; ++i) {
+				Random.seed = Hash.Get(Hash.Get(i) + j);
 				int index = i + j * grid_width;
 				combine[index].mesh = Building.Generate(average_height, max_base_width, max_base_length, noise, new Vector2(style_A, style_B));
 				combine[index].transform = Extensions.TranslationMatrix(max_base_width * i, 0.0f, max_base_length * j);
