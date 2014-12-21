@@ -43,6 +43,9 @@ public class City {
 	                                 int blockWidthInCells,
 	                                 int blockLengthInCells,
 	                                 float streetWidth,
+	                                 int largeBlockWidthInCells,
+	                                 int largeBlockLengthInCells,
+	                                 float largeStreetWidth,
 	                                 float cellWidth,
 	                                 float cellLength,
 	                                 float buildingAverageHeight,
@@ -52,12 +55,20 @@ public class City {
 		CombineInstance[] combine = new CombineInstance[patchWidthInCells * patchLengthInCells];
 
 		for (var j = 0; j < patchLengthInCells; ++j) {
+			var yStreets = j / blockLengthInCells;
+			var yLargeStreets = j / largeBlockLengthInCells;
+			var yStreetOffset = yStreets * streetWidth + yLargeStreets * largeStreetWidth;
+
 			for (var i = 0; i < patchWidthInCells; ++i) {
+				var xStreets = i / blockWidthInCells;
+				var xLargeStreets = i / largeBlockWidthInCells;
+				var xStreetOffset = xStreets * streetWidth + xLargeStreets * largeStreetWidth;
+
+				var x = cellWidth * i + xStreetOffset;
+				var y = cellLength * j + yStreetOffset;
+
 				Random.seed = Hash.Get(Hash.Get(i) + j);
 				int index = i + j * patchWidthInCells;
-				var x = cellWidth * i + (i / blockWidthInCells) * streetWidth;
-				var y = cellLength * j + (j / blockLengthInCells) * streetWidth;
-
 				combine[index].mesh = Building.Generate(buildingAverageHeight, cellWidth, cellLength, noise, new Vector2(styleA, styleB));
 				combine[index].transform = Extensions.TranslationMatrix(x, 0.0f, y);
 			}

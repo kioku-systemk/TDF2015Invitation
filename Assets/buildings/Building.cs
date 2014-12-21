@@ -49,7 +49,7 @@ public class Building {
 
 		building.CombineMeshes(combine);
 	}
-	
+
 	public static Mesh Generate(float averageHeight,	/// Average height of the building
 	                            float maxWidth,			/// Max width of the building
 	                            float maxLength,		/// Max length of the building

@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[ExecuteInEditMode]
 [RequireComponent(typeof(MeshFilter))]
 public class BuildingTester : MonoBehaviour {
 	[Range(1, 50)]
@@ -16,6 +17,15 @@ public class BuildingTester : MonoBehaviour {
 
 	[Range(2.0f, 50.0f)]
 	public float street_width = 8.0f;
+
+	[Range(1, 50)]
+	public int large_block_width = 6;
+
+	[Range(1, 50)]
+	public int large_block_length = 12;
+
+	[Range(2.0f, 50.0f)]
+	public float large_street_width = 8.0f;
 
 	[Range(2.0f, 100.0f)]
 	public float cell_width = 10.0f;
@@ -40,12 +50,15 @@ public class BuildingTester : MonoBehaviour {
 	private int hash = 0;
 
 	public override int GetHashCode() {
-	  var hash = 0;
+		var hash = 0;
 		hash = (patch_width.GetHashCode() + hash).GetHashCode();
 		hash = (patch_length.GetHashCode() + hash).GetHashCode();
 		hash = (block_width.GetHashCode() + hash).GetHashCode();
 		hash = (block_length.GetHashCode() + hash).GetHashCode();
 		hash = (street_width.GetHashCode() + hash).GetHashCode();
+		hash = (large_block_width.GetHashCode() + hash).GetHashCode();
+		hash = (large_block_length.GetHashCode() + hash).GetHashCode();
+		hash = (large_street_width.GetHashCode() + hash).GetHashCode();
 		hash = (cell_width.GetHashCode() + hash).GetHashCode();
 		hash = (cell_length.GetHashCode() + hash).GetHashCode();
 		hash = (average_height.GetHashCode() + hash).GetHashCode();
@@ -66,8 +79,9 @@ public class BuildingTester : MonoBehaviour {
 		mesh = new Mesh();
 		City.GeneratePatch(mesh,
 		                   patch_width, patch_length,
-		                   block_width, block_length,
-		                   street_width, cell_width, cell_length, average_height,
+		                   block_width, block_length, street_width,
+		                   large_block_width, large_block_length, large_street_width,
+		                   cell_width, cell_length, average_height,
 		                   noise, style_A, style_B);
 		GetComponent<MeshFilter>().mesh = mesh;
 	}
