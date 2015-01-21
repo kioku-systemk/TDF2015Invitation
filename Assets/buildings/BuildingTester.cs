@@ -96,5 +96,6 @@ public class BuildingTester : MonoBehaviour {
 
 	private void Update () {
 		Create ();
+		GetComponent<Renderer>().sharedMaterial.SetFloat("_time", Time.time);
 	}
 }
