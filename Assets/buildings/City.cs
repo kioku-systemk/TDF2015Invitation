@@ -78,7 +78,7 @@ public class City {
 				Random.seed = Hash.Get(Hash.Get(i) + j);
 				int index = i + j * patchWidthInCells;
 				combine[index].mesh = Building.Generate(buildingAverageHeight, cellWidth, cellLength, noise, new Vector2(styleA, styleB));
-				combine[index].transform = ParametricFunction.T(x, y, maxX, maxY);
+				combine[index].transform = Extensions.TranslationMatrix(x, 0.0f, y); // ParametricFunction.T(x, y, maxX, maxY);
 			}
 		}
 		patch.CombineMeshes(combine);
@@ -86,7 +86,7 @@ public class City {
 
 	private static class ParametricFunction {
 		public static float X(float u, float v) { return u; }
-		public static float Y(float u, float v) { return 0;}//20.0f * Mathf.Sin(0.02f* u) * Mathf.Sin(0.04f * v); }
+		public static float Y(float u, float v) { return 20.0f * Mathf.Sin(0.02f* u) * Mathf.Sin(0.04f * v); }
 		public static float Z(float u, float v) { return v; }
 
 		public static Vector4 P(float u, float v) { return new Vector4(X(u, v), Y(u, v), Z(u, v), 1.0f); }
