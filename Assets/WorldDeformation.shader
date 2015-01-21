@@ -1,5 +1,6 @@
 ﻿Shader "Custom/WorldDeformation" {
 	Properties {
+		_Color ("Main Color", Color) = (1,1,1,1)
 		//_MainTex ("Texture", 2D) = "white" {}
 		_waveHeight ("wave height", Range(0, 20)) = 0.0
 		_xFreq ("X frequency", Range(0.0, 0.1)) = 0.02
@@ -50,9 +51,10 @@
 			v.normal = mul(v.normal, transform);
 		}
 
+		float4 _Color;
 		//sampler2D _MainTex;
 		void surf (Input IN, inout SurfaceOutput o) {
-			o.Albedo = 1;//tex2D (_MainTex, IN.uv_MainTex).rgb;
+			o.Albedo = _Color;//tex2D (_MainTex, IN.uv_MainTex).rgb;
 		}
 
 		ENDCG
