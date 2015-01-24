@@ -45,6 +45,8 @@ public class BuildingTester : MonoBehaviour {
 	[Range(0.0f, 1.0f)]
 	public float style_B = 0.5f;
 
+	private float width = 1.0f;
+	private float length = 1.0f;
 	private Mesh mesh = null;
 
 	private int hash = 0;
@@ -77,12 +79,14 @@ public class BuildingTester : MonoBehaviour {
 		hash = newHash;
 
 		mesh = new Mesh();
-		City.GeneratePatch(mesh,
-		                   patch_width, patch_length,
-		                   block_width, block_length, street_width,
-		                   large_block_width, large_block_length, large_street_width,
-		                   cell_width, cell_length, average_height,
-		                   noise, style_A, style_B);
+		City.Size size = City.GeneratePatch(mesh,
+		                                    patch_width, patch_length,
+		                                    block_width, block_length, street_width,
+		                                    large_block_width, large_block_length, large_street_width,
+		                                    cell_width, cell_length, average_height,
+		                                    noise, style_A, style_B);
+		width = size.width;
+		length = size.length;
 		GetComponent<MeshFilter>().mesh = mesh;
 	}
 
@@ -96,6 +100,9 @@ public class BuildingTester : MonoBehaviour {
 
 	private void Update () {
 		Create ();
-		GetComponent<Renderer>().sharedMaterial.SetFloat("_time", Time.time);
+		var material = GetComponent<Renderer>().sharedMaterial;
+		material.SetFloat("_time", Time.time);
+		material.SetFloat("_maxWidth", width);
+		material.SetFloat("_maxLength", length);
 	}
 }

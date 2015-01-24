@@ -2,6 +2,18 @@
 
 public class City {
 
+	public struct Size
+	{
+		public float width;
+		public float length;
+
+		public Size(float w, float l)
+		{
+			width = w;
+			length = l;
+		}
+	};
+
 	public static void GenerateBlock(Mesh block,
 	                                 int blockWidthInCells,
 	                                 int blockLengthInCells,
@@ -37,7 +49,32 @@ public class City {
 		return block;
 	}
 
-	public static void GeneratePatch(Mesh patch,
+	public static Size GetPatchSize(int patchWidthInCells,
+	                                int patchLengthInCells,
+	                                int blockWidthInCells,
+	                                int blockLengthInCells,
+	                                float streetWidth,
+	                                int largeBlockWidthInCells,
+	                                int largeBlockLengthInCells,
+	                                float largeStreetWidth,
+	                                float cellWidth,
+	                                float cellLength)
+	{
+		var yStreets = patchLengthInCells / blockLengthInCells;
+		var yLargeStreets = patchLengthInCells / largeBlockLengthInCells;
+		var yStreetOffset = yStreets * streetWidth + yLargeStreets * largeStreetWidth;
+
+		var xStreets = patchWidthInCells / blockWidthInCells;
+		var xLargeStreets = patchWidthInCells / largeBlockWidthInCells;
+		var xStreetOffset = xStreets * streetWidth + xLargeStreets * largeStreetWidth;
+
+		var width = cellWidth * patchWidthInCells + xStreetOffset;
+		var length = cellLength * patchLengthInCells + yStreetOffset;
+
+		return new Size(width, length);
+	}
+
+	public static Size GeneratePatch(Mesh patch,
 	                                 int patchWidthInCells,
 	                                 int patchLengthInCells,
 	                                 int blockWidthInCells,
@@ -53,14 +90,6 @@ public class City {
 	                                 float styleA,
 	                                 float styleB) {
 		CombineInstance[] combine = new CombineInstance[patchWidthInCells * patchLengthInCells];
-
-		var maxXStreets = (patchWidthInCells - 1) / blockWidthInCells;
-		var maxXLargeStreets = (patchWidthInCells - 1) / largeBlockWidthInCells;
-		var maxX = cellWidth * (patchWidthInCells - 1) + maxXStreets * streetWidth + maxXLargeStreets * largeStreetWidth;
-		
-		var maxYStreets = (patchLengthInCells - 1) / blockLengthInCells;
-		var maxYLargeStreets = (patchLengthInCells - 1) / largeBlockLengthInCells;
-		var maxY = cellLength * (patchLengthInCells - 1) + maxYStreets * streetWidth + maxYLargeStreets * largeStreetWidth;
 
 		for (var j = 0; j < patchLengthInCells; ++j) {
 			var yStreets = j / blockLengthInCells;
@@ -82,6 +111,11 @@ public class City {
 			}
 		}
 		patch.CombineMeshes(combine);
+
+		return GetPatchSize(patchWidthInCells, patchLengthInCells,
+		                    blockWidthInCells, blockLengthInCells, streetWidth,
+		                    largeBlockWidthInCells, largeBlockLengthInCells, largeStreetWidth,
+		                    cellWidth, cellLength);
 	}
 
 	private static class ParametricFunction {
