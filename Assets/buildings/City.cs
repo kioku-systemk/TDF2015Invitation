@@ -1,4 +1,7 @@
 ﻿using UnityEngine;
+//using System;
+using System.Collections;
+using System.Collections.Generic;
 
 public class City {
 
@@ -13,6 +16,31 @@ public class City {
 			length = l;
 		}
 	};
+	
+	public static Size GetCitySize(int widthInCells,
+	                               int lengthInCells,
+	                               int blockWidthInCells,
+	                               int blockLengthInCells,
+	                               float streetWidth,
+	                               int largeBlockWidthInCells,
+	                               int largeBlockLengthInCells,
+	                               float largeStreetWidth,
+	                               float cellWidth,
+	                               float cellLength)
+	{
+		var yStreets = lengthInCells / blockLengthInCells;
+		var yLargeStreets = lengthInCells / largeBlockLengthInCells;
+		var yStreetOffset = yStreets * streetWidth + yLargeStreets * largeStreetWidth;
+		
+		var xStreets = widthInCells / blockWidthInCells;
+		var xLargeStreets = widthInCells / largeBlockWidthInCells;
+		var xStreetOffset = xStreets * streetWidth + xLargeStreets * largeStreetWidth;
+		
+		var width = cellWidth * widthInCells + xStreetOffset;
+		var length = cellLength * lengthInCells + yStreetOffset;
+		
+		return new Size(width, length);
+	}
 
 	public static void GenerateBlock(Mesh block,
 	                                 int blockWidthInCells,
@@ -49,32 +77,9 @@ public class City {
 		return block;
 	}
 
-	public static Size GetPatchSize(int patchWidthInCells,
-	                                int patchLengthInCells,
-	                                int blockWidthInCells,
-	                                int blockLengthInCells,
-	                                float streetWidth,
-	                                int largeBlockWidthInCells,
-	                                int largeBlockLengthInCells,
-	                                float largeStreetWidth,
-	                                float cellWidth,
-	                                float cellLength)
-	{
-		var yStreets = patchLengthInCells / blockLengthInCells;
-		var yLargeStreets = patchLengthInCells / largeBlockLengthInCells;
-		var yStreetOffset = yStreets * streetWidth + yLargeStreets * largeStreetWidth;
-
-		var xStreets = patchWidthInCells / blockWidthInCells;
-		var xLargeStreets = patchWidthInCells / largeBlockWidthInCells;
-		var xStreetOffset = xStreets * streetWidth + xLargeStreets * largeStreetWidth;
-
-		var width = cellWidth * patchWidthInCells + xStreetOffset;
-		var length = cellLength * patchLengthInCells + yStreetOffset;
-
-		return new Size(width, length);
-	}
-
-	public static Size GeneratePatch(Mesh patch,
+	public static void GeneratePatch(Mesh patch,
+	                                 int i0,
+	                                 int j0,
 	                                 int patchWidthInCells,
 	                                 int patchLengthInCells,
 	                                 int blockWidthInCells,
@@ -89,20 +94,21 @@ public class City {
 	                                 float noise,
 	                                 float styleA,
 	                                 float styleB) {
+		Debug.Log("Generate patch [" + patchWidthInCells + " x " + patchLengthInCells +"]");
 		CombineInstance[] combine = new CombineInstance[patchWidthInCells * patchLengthInCells];
 
 		for (var j = 0; j < patchLengthInCells; ++j) {
-			var yStreets = j / blockLengthInCells;
-			var yLargeStreets = j / largeBlockLengthInCells;
+			var yStreets = (j + j0) / blockLengthInCells;
+			var yLargeStreets = (j + j0) / largeBlockLengthInCells;
 			var yStreetOffset = yStreets * streetWidth + yLargeStreets * largeStreetWidth;
 
 			for (var i = 0; i < patchWidthInCells; ++i) {
-				var xStreets = i / blockWidthInCells;
-				var xLargeStreets = i / largeBlockWidthInCells;
+				var xStreets = (i + i0) / blockWidthInCells;
+				var xLargeStreets = (i + i0) / largeBlockWidthInCells;
 				var xStreetOffset = xStreets * streetWidth + xLargeStreets * largeStreetWidth;
 
-				var x = cellWidth * i + xStreetOffset;
-				var y = cellLength * j + yStreetOffset;
+				var x = cellWidth * (i + i0) + xStreetOffset;
+				var y = cellLength * (j + j0) + yStreetOffset;
 
 				Random.seed = Hash.Get(Hash.Get(i) + j);
 				int index = i + j * patchWidthInCells;
@@ -111,11 +117,50 @@ public class City {
 			}
 		}
 		patch.CombineMeshes(combine);
+	}
 
-		return GetPatchSize(patchWidthInCells, patchLengthInCells,
-		                    blockWidthInCells, blockLengthInCells, streetWidth,
-		                    largeBlockWidthInCells, largeBlockLengthInCells, largeStreetWidth,
-		                    cellWidth, cellLength);
+	public static Size GenerateCity(List<Mesh> meshes,
+									int cityWidthInCells,
+	                                int cityLengthInCells,
+	                                int idealPatchWidthInCells,
+	                                int idealPatchLengthInCells,
+	                                int blockWidthInCells,
+	                                int blockLengthInCells,
+	                                float streetWidth,
+	                                int largeBlockWidthInCells,
+	                                int largeBlockLengthInCells,
+	                                float largeStreetWidth,
+	                                float cellWidth,
+	                                float cellLength,
+	                                float buildingAverageHeight,
+	                                float noise,
+	                                float styleA,
+	                                float styleB)
+	{
+		Debug.Log("Generate city [" + cityWidthInCells + " x " + cityLengthInCells +"]");
+
+		for (var j = 0; j < cityLengthInCells; j += idealPatchLengthInCells) {
+			for (var i = 0; i < cityWidthInCells; i += idealPatchWidthInCells) {
+				var patch = new Mesh();
+				var patchWidth = Mathf.Min(idealPatchWidthInCells, cityWidthInCells - i);
+				var patchLength = Mathf.Min(idealPatchLengthInCells, cityLengthInCells - j);
+
+				GeneratePatch(patch, i, j, patchWidth, patchLength,
+				              blockWidthInCells, blockLengthInCells, streetWidth,
+				              largeBlockWidthInCells, largeBlockLengthInCells, largeStreetWidth,
+				              cellWidth, cellLength,
+				              buildingAverageHeight, noise, styleA, styleB);
+				meshes.Add(patch);
+			}
+		}
+
+		Debug.Log("Generated " + meshes.Count + (meshes.Count > 1 ? " patches" : "patch"));
+
+		
+		return GetCitySize(cityWidthInCells, cityLengthInCells,
+		                   blockWidthInCells, blockLengthInCells, streetWidth,
+		                   largeBlockWidthInCells, largeBlockLengthInCells, largeStreetWidth,
+		                   cellWidth, cellLength);
 	}
 
 	private static class ParametricFunction {

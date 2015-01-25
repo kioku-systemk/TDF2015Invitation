@@ -1,13 +1,27 @@
 using UnityEngine;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 
 [ExecuteInEditMode]
 [RequireComponent(typeof(MeshFilter))]
 public class BuildingTester : MonoBehaviour {
-	[Range(1, 50)]
-	public int patch_width = 10;
 
-	[Range(1, 50)]
-	public int patch_length = 10;
+	public GameObject patchObject = null;
+
+	[Range(1, 100)]
+	public int city_width = 10;
+
+	[Range(1, 100)]
+	public int city_length = 10;
+
+	/*
+	[Range(1, 20)]
+	public int ideal_patch_width = 10;
+	
+	[Range(1, 20)]
+	public int ideal_patch_length = 10;
+	*/
 
 	[Range(1, 50)]
 	public int block_width = 2;
@@ -47,14 +61,15 @@ public class BuildingTester : MonoBehaviour {
 
 	private float width = 1.0f;
 	private float length = 1.0f;
-	private Mesh mesh = null;
 
 	private int hash = 0;
 
 	public override int GetHashCode() {
 		var hash = 0;
-		hash = (patch_width.GetHashCode() + hash).GetHashCode();
-		hash = (patch_length.GetHashCode() + hash).GetHashCode();
+		hash = (city_width.GetHashCode() + hash).GetHashCode();
+		hash = (city_length.GetHashCode() + hash).GetHashCode();
+		//hash = (ideal_patch_width.GetHashCode() + hash).GetHashCode();
+		//hash = (ideal_patch_length.GetHashCode() + hash).GetHashCode();
 		hash = (block_width.GetHashCode() + hash).GetHashCode();
 		hash = (block_length.GetHashCode() + hash).GetHashCode();
 		hash = (street_width.GetHashCode() + hash).GetHashCode();
@@ -78,16 +93,41 @@ public class BuildingTester : MonoBehaviour {
  		}
 		hash = newHash;
 
-		mesh = new Mesh();
-		City.Size size = City.GeneratePatch(mesh,
-		                                    patch_width, patch_length,
-		                                    block_width, block_length, street_width,
-		                                    large_block_width, large_block_length, large_street_width,
-		                                    cell_width, cell_length, average_height,
-		                                    noise, style_A, style_B);
+
+		List<Mesh> meshes = new List<Mesh>();
+		City.Size size = City.GenerateCity(meshes,
+		                                   city_width, city_length,
+		                                   20, 20, //ideal_patch_width, ideal_patch_length,
+		                                   block_width, block_length, street_width,
+		                                   large_block_width, large_block_length, large_street_width,
+		                                   cell_width, cell_length, average_height,
+		                                   noise, style_A, style_B);
 		width = size.width;
 		length = size.length;
-		GetComponent<MeshFilter>().mesh = mesh;
+		GetComponent<MeshFilter>().mesh = null;//meshes[0];
+
+		var numberOfMeshes = meshes.Count;
+
+		// Destroy over numbered children
+		for (var i = transform.childCount - 1; i >= numberOfMeshes; --i) {
+			DestroyImmediate(transform.GetChild(i).gameObject);
+		}
+
+		// Add children if necessary
+		for (var i = transform.childCount; i < numberOfMeshes; ++i) {
+			var patch = Instantiate(patchObject) as GameObject;
+			patch.transform.parent = this.transform;
+		}
+
+		// At this point, we have the right number of children
+		for (var i = 0; i < numberOfMeshes; ++i)
+		{
+			var meshFilter = transform.GetChild(i).GetComponent<MeshFilter>();
+
+			// Hack to avoid culling of shaded vertices
+			meshFilter.sharedMesh = meshes[i];
+			meshFilter.sharedMesh.bounds = new Bounds(Vector3.zero, float.PositiveInfinity * Vector3.one);
+		}
 	}
 
 	private void Awake () {
