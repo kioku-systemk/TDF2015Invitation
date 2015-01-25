@@ -104,7 +104,6 @@ public class BuildingTester : MonoBehaviour {
 		                                   noise, style_A, style_B);
 		width = size.width;
 		length = size.length;
-		GetComponent<MeshFilter>().mesh = null;//meshes[0];
 
 		var numberOfMeshes = meshes.Count;
 
@@ -124,9 +123,10 @@ public class BuildingTester : MonoBehaviour {
 		{
 			var meshFilter = transform.GetChild(i).GetComponent<MeshFilter>();
 
-			// Hack to avoid culling of shaded vertices
+			// Hack to avoid culling of shaded vertices;
+			// FIXME: deduce bounding box from deformation.
 			meshFilter.sharedMesh = meshes[i];
-			meshFilter.sharedMesh.bounds = new Bounds(Vector3.zero, float.PositiveInfinity * Vector3.one);
+			meshFilter.sharedMesh.bounds = new Bounds(Vector3.zero, 2000.0f * Vector3.one);
 		}
 	}
 

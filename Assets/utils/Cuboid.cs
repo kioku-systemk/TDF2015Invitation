@@ -57,18 +57,37 @@ public class Cuboid {
 		16, 17, 18,   18, 19, 16,
 		20, 21, 22,   22, 23, 20,
 	};
-	
 
-	public static Mesh Create(Vector3 size)
+	public enum Face
+	{
+		none	= 0,
+
+		left	= 1,
+		right	= 2,
+		bottom	= 4,
+		top		= 8,
+		back	= 16,
+		front	= 32,
+
+		all		= 63,
+	};
+
+	private static bool IsFaceIncluded(int i, Face face)
+	{
+		int test = 1 << (i/6);
+		return ((int)face & test) != 0;
+	}
+
+	public static Mesh Create(Vector3 size, Face face)
 	{
 		Mesh cuboid = new Mesh();
 		cuboid.name = "Cuboid";
-		cuboid.vertices = vertices.Select(x => new Vector3(x.p.x * size.x, x.p.y * size.y, x.p.z * size.z)).ToArray();
-		cuboid.normals = vertices.Select(x => x.n).ToArray();
-		cuboid.tangents = vertices.Select(x => new Vector4(x.t.x, x.t.y, x.t.z, 0.0f)).ToArray();
-		cuboid.uv = vertices.Select(x => x.uv).ToArray();
-		cuboid.colors = vertices.Select(x => Color.white).ToArray();
-		cuboid.triangles = triangles;
+		cuboid.vertices	= vertices.Select(x => new Vector3(x.p.x * size.x, x.p.y * size.y, x.p.z * size.z)).ToArray();
+		cuboid.normals	= vertices.Select(x => x.n).ToArray();
+		cuboid.tangents	= vertices.Select(x => new Vector4(x.t.x, x.t.y, x.t.z, 0.0f)).ToArray();
+		cuboid.uv		= vertices.Select(x => x.uv).ToArray();
+		cuboid.colors	= vertices.Select(x => Color.white).ToArray();
+		cuboid.triangles = triangles.Where((v, i) => IsFaceIncluded(i, face)).ToArray();
 		return cuboid;
 	}
 }

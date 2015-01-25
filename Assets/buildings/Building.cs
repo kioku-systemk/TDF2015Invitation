@@ -36,15 +36,15 @@ public class Building {
 		CombineInstance[] combine = new CombineInstance[3];
 
 		// Top
-		combine[0].mesh = Cuboid.Create(new Vector3(topWidth, topHeight, topLength)); // FIXME: (pave_all & ~pave_bottom)
+		combine[0].mesh = Cuboid.Create(new Vector3(topWidth, topHeight, topLength), (Cuboid.Face.all & ~Cuboid.Face.bottom));
 		combine[0].transform = Extensions.TranslationMatrix(topX + trunkX + baseX, 0.5f * topHeight + trunkHeight + baseHeight, topY + trunkY + baseY);
 
 		// Main (trunk) part
-		combine[1].mesh = Cuboid.Create(new Vector3(trunkWidth, trunkHeight, trunkLength)); // FIXME: (pave_all & ~pave_bottom)
+		combine[1].mesh = Cuboid.Create(new Vector3(trunkWidth, trunkHeight, trunkLength), (Cuboid.Face.all & ~Cuboid.Face.bottom));
 		combine[1].transform = Extensions.TranslationMatrix(trunkX, 0.5f * trunkHeight + baseHeight, trunkY);
 
 		// Base
-		combine[2].mesh = Cuboid.Create(new Vector3(baseWidth, baseHeight, baseLength)); // FIXME: (pave_all & ~pave_bottom)
+		combine[2].mesh = Cuboid.Create(new Vector3(baseWidth, baseHeight, baseLength), (Cuboid.Face.all & ~Cuboid.Face.bottom));
 		combine[2].transform = Extensions.TranslationMatrix(baseX, 0.5f * baseHeight, baseY);
 
 		building.CombineMeshes(combine);
