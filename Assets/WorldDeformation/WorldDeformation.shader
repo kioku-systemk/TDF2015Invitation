@@ -36,12 +36,35 @@
 		// Parametric equation: [x,y] --> [x,y,z]
 		//
 		#define TAU 6.2831853
-		float X(float2 p) { return (_maxLength/TAU + _maxWidth/TAU * sin(TAU * p.x/_maxWidth)) * sin(TAU * p.y/_maxLength); }
-		float Y(float2 p) { return _maxWidth/TAU * cos(TAU * p.x/_maxWidth); }
-		float Z(float2 p) { return (_maxLength/TAU + _maxWidth/TAU * sin(TAU * p.x/_maxWidth)) * cos(TAU * p.y/_maxLength); }
+		
+		//float X(float2 p) { return (_maxLength/TAU + _maxWidth/TAU * sin(TAU * p.x/_maxWidth)) * sin(TAU * p.y/_maxLength); }
+		//float Y(float2 p) { return _maxWidth/TAU * cos(TAU * p.x/_maxWidth); }
+		//float Z(float2 p) { return (_maxLength/TAU + _maxWidth/TAU * sin(TAU * p.x/_maxWidth)) * cos(TAU * p.y/_maxLength); }
+		
+		//float X(float2 p) { return 1 * sin((TAU / 2) * p.x / _maxWidth) * cos(TAU * p.y / _maxLength); }
+		//float Y(float2 p) { return 1 * sin((TAU / 2) * p.x / _maxWidth) * sin(TAU * p.y / _maxLength); }
+		//float Z(float2 p) { return 1 * cos((TAU / 2) * p.x / _maxWidth); }
+		
 		//float X(float2 p) { return p.x; }
 		//float Y(float2 p) { return _waveHeight * (sin(_speed * _Time.y + _xFreq * p.x) + sin(_speed * _Time.y + _yFreq * p.y)); }
 		//float Z(float2 p) { return p.y; }
+		
+		float sX(float2 p) { return (_maxLength/TAU + _maxWidth/TAU * sin(TAU * p.x/_maxWidth)) * sin(TAU * p.y/_maxLength); }
+		float sY(float2 p) { return _maxWidth/TAU * cos(TAU * p.x/_maxWidth); }
+		float sZ(float2 p) { return (_maxLength/TAU + _maxWidth/TAU * sin(TAU * p.x/_maxWidth)) * cos(TAU * p.y/_maxLength); }
+		
+		//float X(float2 p) { return 1 * sin((TAU / 2) * p.x / _maxWidth) * cos(TAU * p.y / _maxLength); }
+		//float Y(float2 p) { return 1 * sin((TAU / 2) * p.x / _maxWidth) * sin(TAU * p.y / _maxLength); }
+		//float Z(float2 p) { return 1 * cos((TAU / 2) * p.x / _maxWidth); }
+		
+		float pX(float2 p) { return p.x; }
+		float pY(float2 p) { return 0; }
+		float pZ(float2 p) { return p.y; }
+		
+		float X(float2 p) { return sX(p); }
+		float Y(float2 p) { return sY(p); }
+		float Z(float2 p) { return sZ(p); }
+		
 		float3 P(float2 p) { return float3(X(p), Y(p), Z(p)); }
 
 		//
