@@ -66,7 +66,7 @@
 			{
 			float4x4 transform = T(p.xz);
 			v.vertex = mul(p - float4(p.x, 0.0, p.z, 0.0), transform);
-			v.normal = mul(v.normal, transform);
+			v.normal = mul(float4(v.normal, 0.0), transform).xyz;
 			}
 		}
 
