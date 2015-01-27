@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 [ExecuteInEditMode]
 [RequireComponent(typeof(MeshFilter))]
-public class BuildingTester : MonoBehaviour {
+public class CityBuilder : MonoBehaviour {
 
 	public GameObject patchObject = null;
 
