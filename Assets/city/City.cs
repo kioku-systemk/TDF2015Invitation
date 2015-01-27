@@ -16,7 +16,7 @@ public class City {
 			length = l;
 		}
 	};
-	
+
 	public static Size GetCitySize(int widthInCells,
 	                               int lengthInCells,
 	                               int blockWidthInCells,
@@ -31,14 +31,14 @@ public class City {
 		var yStreets = lengthInCells / blockLengthInCells;
 		var yLargeStreets = lengthInCells / largeBlockLengthInCells;
 		var yStreetOffset = yStreets * streetWidth + yLargeStreets * largeStreetWidth;
-		
+
 		var xStreets = widthInCells / blockWidthInCells;
 		var xLargeStreets = widthInCells / largeBlockWidthInCells;
 		var xStreetOffset = xStreets * streetWidth + xLargeStreets * largeStreetWidth;
-		
+
 		var width = cellWidth * widthInCells + xStreetOffset;
 		var length = cellLength * lengthInCells + yStreetOffset;
-		
+
 		return new Size(width, length);
 	}
 
@@ -57,7 +57,14 @@ public class City {
 			for (var i = 0; i < blockWidthInCells; ++i) {
 				Random.seed = Hash.Get(Hash.Get(i) + j);
 				int index = i + j * blockWidthInCells;
-				combine[index].mesh = Building.Generate(buildingAverageHeight, cellWidth, cellLength, noise, new Vector2(styleA, styleB));
+
+				Building.BillboardDesc billboard = Building.BillboardDesc.None;
+				if (i == 0) { billboard = Building.BillboardDesc.Left; }
+				else if (j == 0) { billboard = Building.BillboardDesc.Front; }
+				else if (i == blockWidthInCells - 1) { billboard = Building.BillboardDesc.Right; }
+				else if (j == blockLengthInCells - 1) { billboard = Building.BillboardDesc.Back; }
+
+				combine[index].mesh = Building.Generate(buildingAverageHeight, cellWidth, cellLength, noise, new Vector2(styleA, styleB), billboard);
 				combine[index].transform = Extensions.TranslationMatrix(cellWidth * i, 0.0f, cellLength * j);
 			}
 		}
@@ -110,9 +117,15 @@ public class City {
 				var x = cellWidth * (i + i0) + xStreetOffset;
 				var y = cellLength * (j + j0) + yStreetOffset;
 
+				Building.BillboardDesc billboard = Building.BillboardDesc.None;
+				if (((i + i0) % blockWidthInCells) == 0) { billboard = Building.BillboardDesc.Left; }
+				else if (((i + i0) % blockWidthInCells) == 1) { billboard = Building.BillboardDesc.Right; }
+				else if (((j + j0) % blockLengthInCells) == 0) { billboard = Building.BillboardDesc.Front; }
+				else if (((j + j0) % blockLengthInCells) == 1) { billboard = Building.BillboardDesc.Back; }
+
 				Random.seed = Hash.Get(Hash.Get(i) + j);
 				int index = i + j * patchWidthInCells;
-				combine[index].mesh = Building.Generate(buildingAverageHeight, cellWidth, cellLength, noise, new Vector2(styleA, styleB));
+				combine[index].mesh = Building.Generate(buildingAverageHeight, cellWidth, cellLength, noise, new Vector2(styleA, styleB), billboard);
 				combine[index].transform = Extensions.TranslationMatrix(x, 0.0f, y); // ParametricFunction.T(x, y, maxX, maxY);
 			}
 		}
@@ -156,7 +169,7 @@ public class City {
 
 		Debug.Log("Generated " + meshes.Count + (meshes.Count > 1 ? " patches" : "patch"));
 
-		
+
 		return GetCitySize(cityWidthInCells, cityLengthInCells,
 		                   blockWidthInCells, blockLengthInCells, streetWidth,
 		                   largeBlockWidthInCells, largeBlockLengthInCells, largeStreetWidth,

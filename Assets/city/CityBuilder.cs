@@ -18,7 +18,7 @@ public class BuildingTester : MonoBehaviour {
 	/*
 	[Range(1, 20)]
 	public int ideal_patch_width = 10;
-	
+
 	[Range(1, 20)]
 	public int ideal_patch_length = 10;
 	*/
