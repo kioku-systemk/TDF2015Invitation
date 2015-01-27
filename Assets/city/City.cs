@@ -118,10 +118,10 @@ public class City {
 				var y = cellLength * (j + j0) + yStreetOffset;
 
 				Building.BillboardDesc billboard = Building.BillboardDesc.None;
-				if (((i + i0) % blockWidthInCells) == 0) { billboard = Building.BillboardDesc.Left; }
-				else if (((i + i0) % blockWidthInCells) == 1) { billboard = Building.BillboardDesc.Right; }
-				else if (((j + j0) % blockLengthInCells) == 0) { billboard = Building.BillboardDesc.Front; }
-				else if (((j + j0) % blockLengthInCells) == 1) { billboard = Building.BillboardDesc.Back; }
+				if (((i + i0) % largeBlockWidthInCells) == 0) { billboard = Building.BillboardDesc.Left; }
+				else if (((i + i0 + 1) % largeBlockWidthInCells) == 0) { billboard = Building.BillboardDesc.Right; }
+				else if (((j + j0) % largeBlockLengthInCells) == 0) { billboard = Building.BillboardDesc.Front; }
+				else if (((j + j0 + 1) % largeBlockLengthInCells) == 0) { billboard = Building.BillboardDesc.Back; }
 
 				Random.seed = Hash.Get(Hash.Get(i) + j);
 				int index = i + j * patchWidthInCells;
