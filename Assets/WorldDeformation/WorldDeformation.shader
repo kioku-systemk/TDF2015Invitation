@@ -100,23 +100,36 @@
 		//
 		#define TAU 6.2831853
 
-		// Torus
+		// No transformation
 		float3 P_identity(float2 p)
 		{
 			return float3(p.x, 0.0, p.y);
 		}
 
+		// Cylinder
+		float3 P_cylinder(float2 p)
+		{
+			float theta = TAU * p.x/_maxWidth;
+			float r = _maxLength/TAU;
+
+			float x = r * cos(theta);
+			float y = r * sin(theta);
+			float z = p.y;
+
+			return float3(x, y, z);
+		}
+
 		// Torus
 		float3 P_torus(float2 p)
 		{
-			float u = TAU * p.y/_maxLength;
-			float v = TAU * p.x/_maxWidth;
-			float a = _maxWidth/TAU;
-			float c = _maxLength/TAU;
+			float theta = TAU * p.x/_maxWidth;
+			float phi = TAU * p.y/_maxLength;
+			float r1 = _maxWidth/TAU;
+			float r2 = _maxLength/TAU;
 
-			float x = (c + a * sin(TAU * p.x/_maxWidth)) * sin(u);
-			float y = a * cos(v);
-			float z = (c + a * sin(TAU * p.x/_maxWidth)) * cos(u);
+			float x = (r1 * sin(theta) + r2) * sin(phi);
+			float y = r1 * cos(theta);
+			float z = (r1 * sin(theta) + r2) * cos(phi);
 
 			return float3(x, y, z);
 		}
@@ -125,16 +138,18 @@
 		float3 P_pq_torus(float2 p)
 		{
 			// TODO
-			float P = 0.0;
+			float P = 1.0;
 			float Q = 0.0;
 
-			float theta = 0.0;
-			float phi = 0.0;
-			float r = cos(Q * theta) + 2.0;
+			float theta = TAU * p.x/_maxWidth;
+			float phi = TAU * p.y/_maxLength;
+			float r1 = _maxWidth/TAU;
+			float r2 = _maxLength/TAU;
 
-			float x = r * cos(P * phi);
-			float y = -sin(Q * phi);
-			float z = r * sin(P * phi);
+			float r = 0.5 * sin(Q * phi) + 1.0;
+			float x = r * sin(P * phi);
+			float y = r * cos(Q * phi);
+			float z = r * cos(P * phi);
 
 			return float3(x, y, z);
 		}
@@ -152,8 +167,8 @@
 		float3 P(float2 p)
 		{
 			return (_vertexDeformation < 0.5 ?
-					lerp(P_identity(p),	P_sinus(p), clamp(2.0 * _vertexDeformation, 0.0, 1.0)) :
-					lerp(P_sinus(p),	P_torus(p), clamp(2.0 * _vertexDeformation - 1.0, 0.0, 1.0)));
+					lerp(P_identity(p),	P_cylinder(p), clamp(2.0 * _vertexDeformation, 0.0, 1.0)) :
+					lerp(P_cylinder(p),	P_torus(p), clamp(2.0 * _vertexDeformation - 1.0, 0.0, 1.0)));
 		}
 
 		//
