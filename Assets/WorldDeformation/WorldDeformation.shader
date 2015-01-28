@@ -19,11 +19,66 @@
 		Tags { "RenderType" = "Opaque" }
 
 		CGPROGRAM
+
+		// From documentation:
+		// http://docs.unity3d.com/Manual/SL-SurfaceShaders.html
+		//
+		// vertex:Func - Custom vertex modification function. See Tree
+		//               Bark shader for example.
+		//
+		// addshadow   - Add shadow caster & collector passes. Commonly
+		//               used with custom vertex modification, so that
+		//               shadow casting also gets any procedural
+		//               vertex animation.
 		#pragma surface surf Lambert vertex:vert addshadow
 
+
+		// Surface Shader input structure
+		//
+		// The input structure Input generally has any texture
+		// coordinates needed by the shader. Texture coordinates must
+		// be named "uv" followed by texture name (or start it with
+		// "uv2" to use second texture coordinate set).
 		struct Input {
 			float2 uv_MainTex;
+			float3 worldPos;
 		};
+		// Additional values that can be put into Input structure:
+		//
+    	// float3 viewDir     - will contain view direction, for computing
+    	//                      Parallax effects, rim lighting etc.
+		//
+    	// float4 with COLOR semantic - will contain interpolated
+    	//                      per-vertex color.
+		//
+    	// float4 screenPos   - will contain screen space position for
+    	//                      reflection effects. Used by WetStreet
+    	//                      shader in Dark Unity for example.
+		//
+    	// float3 worldPos    - will contain world space position.
+		//
+    	// float3 worldRefl   - will contain world reflection vector if
+    	//                      surface shader does not write to
+    	//                      o.Normal. See Reflect-Diffuse shader
+    	//                      for example.
+		//
+    	// float3 worldNormal - will contain world normal vector if
+    	//                      surface shader does not write to
+    	//                      o.Normal.
+		//
+    	// float3 worldRefl; INTERNAL_DATA - will contain world
+    	//                      reflection vector if surface shader
+    	//                      writes to o.Normal. To get the
+    	//                      reflection vector based on per-pixel
+    	//                      normal map, use WorldReflectionVector
+    	//                      (IN, o.Normal). See Reflect-Bumped
+    	//                      shader for example.
+		//
+    	// float3 worldNormal; INTERNAL_DATA - will contain world
+    	//                      normal vector if surface shader writes
+    	//                      to o.Normal. To get the normal vector
+    	//                      based on per-pixel normal map, use
+    	//                      WorldNormalVector (IN, o.Normal).
 
 		uniform float _vertexDeformation;
 		uniform float _waveHeight;
@@ -134,11 +189,16 @@
 		//
 		// TODO
 		//
-		float3 awesomeShaderEffect()
+		float3 awesomeShaderEffect(Input IN)
 		{
-			float3 superEffect1 = float3(0.8, 0.0, 0.3);
-			float3 superEffect2 = float3(0.3, 0.8, 0.0);
-			float3 superEffect3 = float3(0.0, 0.3, 0.8);
+			float3 superEffect1 = float3(0.8, 0.0, 0.3) * frac(2.0 * _Time.y);
+
+			float3 superEffect2 = float3(0.3, 0.8, 0.0) *
+				((floor(0.5 * IN.worldPos.x) - 2.0 * floor(0.25 * IN.worldPos.x)) *
+				 (floor(0.5 * IN.worldPos.y) - 2.0 * floor(0.25 * IN.worldPos.y)) *
+				 (floor(0.5 * IN.worldPos.z) - 2.0 * floor(0.25 * IN.worldPos.z)));
+
+			float3 superEffect3 = float3(0.0, 0.3, 0.8) * IN.uv_MainTex.x;
 			float3 superEffect4 = float3(0.6, 0.6, 0.6);
 
 			return (_effect1Intensity * superEffect1 +
@@ -150,7 +210,7 @@
 		float4 _Color;
 		//sampler2D _MainTex;
 		void surf (Input IN, inout SurfaceOutput o) {
-			o.Albedo = _Color * float4(awesomeShaderEffect(), 1.0); // * tex2D(_MainTex, IN.uv_MainTex).rgb;
+			o.Albedo = _Color * float4(awesomeShaderEffect(IN), 1.0); // * tex2D(_MainTex, IN.uv_MainTex).rgb;
 		}
 
 		// ---8<--------------------------------------------------------------
