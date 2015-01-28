@@ -19,4 +19,18 @@ public class WorldDeformationParameters : MonoBehaviour {
 
 	[Range(0.0f, 10.0f)]
 	public float speed = 1.0f;
+
+	// ---8<------------------------------------------------------------------
+
+	[Range(0.0f, 1.0f)]
+	public float effect1_intensity = 0.0f;
+
+	[Range(0.0f, 1.0f)]
+	public float effect2_intensity = 0.0f;
+
+	[Range(0.0f, 1.0f)]
+	public float effect3_intensity = 0.0f;
+
+	[Range(0.0f, 1.0f)]
+	public float effect4_intensity = 0.0f;
 }

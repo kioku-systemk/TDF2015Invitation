@@ -8,12 +8,18 @@ public class WorldDeformation : MonoBehaviour {
 	void Start () {
 		parameters = GameObject.Find("GlobalParameters").GetComponent<WorldDeformationParameters>();
 	}
-	
+
 	private void Update(){
 		var m = GetComponent<Renderer>().sharedMaterial;
+		m.SetFloat("_vertexDeformation", parameters.vertex_deformation);
 		m.SetFloat("_waveHeight", parameters.wave_height);
 		m.SetFloat("_xFreq", parameters.x_freq);
 		m.SetFloat("_yFreq", parameters.y_freq);
 		m.SetFloat("_speed", parameters.speed);
+
+		m.SetFloat("_effect1Intensity", parameters.effect1_intensity);
+		m.SetFloat("_effect2Intensity", parameters.effect2_intensity);
+		m.SetFloat("_effect3Intensity", parameters.effect3_intensity);
+		m.SetFloat("_effect4Intensity", parameters.effect4_intensity);
 	}
 }

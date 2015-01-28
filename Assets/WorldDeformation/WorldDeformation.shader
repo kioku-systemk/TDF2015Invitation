@@ -9,8 +9,11 @@
 		_speed ("Speed", Range(0.0, 10.0)) = 1.0
 		_maxWidth ("Max width", Float) = 1.0
 		_maxLength ("Max length", Float) = 1.0
-		_a ("A", Range(0.0, 1000.0)) = 1.0
-		_c ("C", Range(0.0, 1000.0)) = 1.0
+
+		_effect1Intensity ("Effect 1 intensity", Range(0.0, 1.0)) = 0.0
+		_effect2Intensity ("Effect 2 intensity", Range(0.0, 1.0)) = 0.0
+		_effect3Intensity ("Effect 3 intensity", Range(0.0, 1.0)) = 0.0
+		_effect4Intensity ("Effect 4 intensity", Range(0.0, 1.0)) = 0.0
 	}
 	SubShader {
 		Tags { "RenderType" = "Opaque" }
@@ -29,11 +32,16 @@
 		uniform float _speed;
 		uniform float _maxWidth;
 		uniform float _maxLength;
-		uniform float _a;
-		uniform float _c;
+		uniform float _effect1Intensity;
+		uniform float _effect2Intensity;
+		uniform float _effect3Intensity;
+		uniform float _effect4Intensity;
+
+		// ---8<--------------------------------------------------------------
+		// Vertex shading
 
 		//
-		// Parametric equation: [x,y] --> [x,y,z]
+		// Parametric equations: [x,y] --> [x,y,z]
 		//
 		#define TAU 6.2831853
 
@@ -120,11 +128,32 @@
 			}
 		}
 
+		// ---8<--------------------------------------------------------------
+		// Fragment shading
+
+		//
+		// TODO
+		//
+		float3 awesomeShaderEffect()
+		{
+			float3 superEffect1 = float3(0.8, 0.0, 0.3);
+			float3 superEffect2 = float3(0.3, 0.8, 0.0);
+			float3 superEffect3 = float3(0.0, 0.3, 0.8);
+			float3 superEffect4 = float3(0.6, 0.6, 0.6);
+
+			return (_effect1Intensity * superEffect1 +
+					_effect2Intensity * superEffect2 +
+					_effect3Intensity * superEffect3 +
+					_effect4Intensity * superEffect4);
+		}
+
 		float4 _Color;
 		//sampler2D _MainTex;
 		void surf (Input IN, inout SurfaceOutput o) {
-			o.Albedo = _Color;//tex2D (_MainTex, IN.uv_MainTex).rgb;
+			o.Albedo = _Color * float4(awesomeShaderEffect(), 1.0); // * tex2D(_MainTex, IN.uv_MainTex).rgb;
 		}
+
+		// ---8<--------------------------------------------------------------
 
 		ENDCG
 	}
