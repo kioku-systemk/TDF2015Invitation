@@ -107,18 +107,46 @@
 		}
 
 		// Cylinder
+		float3 P_halfcylinder(float2 p)
+		{
+			float theta = -0.7 + 0.5 * TAU * p.x/_maxWidth;
+			float r = _maxLength/TAU;
+
+			float x = -r * cos(theta) + r;
+			float y = -r * sin(theta) + r;
+			float z = p.y;
+
+			return float3(x, y, z);
+		}
+		
+		// Cylinder
 		float3 P_cylinder(float2 p)
 		{
 			float theta = TAU * p.x/_maxWidth;
 			float r = _maxLength/TAU;
 
-			float x = r * cos(theta);
-			float y = r * sin(theta);
+			float x = r * cos(theta) + r;
+			float y = r * sin(theta) + r;
 			float z = p.y;
 
 			return float3(x, y, z);
 		}
 
+		// Torus2
+		float3 P_torus2(float2 p)
+		{
+			float theta = TAU * p.x/_maxWidth;
+			float phi = 0.5 * TAU * p.y/_maxLength;
+			float r1 = _maxWidth/TAU;
+			float r2 = _maxLength/TAU;
+
+			float x = (r1 * sin(theta) + r2) * -sin(phi) + r2;
+			float y = r1 * cos(theta) + r2;
+			float z = (r1 * sin(theta) + r2) * -cos(phi);
+
+			return float3(x, y, z);
+		}
+		
 		// Torus
 		float3 P_torus(float2 p)
 		{
@@ -166,9 +194,23 @@
 		// Combined final equation
 		float3 P(float2 p)
 		{
+		
+			// TODO: more optimization?
+			return (_vertexDeformation < 0.25 ?
+					lerp(P_identity(p),	P_halfcylinder(p), clamp(4.0 * _vertexDeformation, 0.0, 1.0)) :
+					(_vertexDeformation < 0.5 ?
+						lerp(P_halfcylinder(p),	P_cylinder(p), clamp(4.0 * _vertexDeformation - 1.0, 0.0, 1.0)) :
+						(_vertexDeformation < 0.75 ?
+						lerp(P_cylinder(p),	P_torus2(p), clamp(4.0 * _vertexDeformation - 2.0, 0.0, 1.0)) :
+						lerp(P_torus2(p),	P_torus(p), clamp(4.0 * _vertexDeformation - 3.0, 0.0, 1.0))
+						))
+					);
+		
+		/*
 			return (_vertexDeformation < 0.5 ?
-					lerp(P_identity(p),	P_cylinder(p), clamp(2.0 * _vertexDeformation, 0.0, 1.0)) :
-					lerp(P_cylinder(p),	P_torus(p), clamp(2.0 * _vertexDeformation - 1.0, 0.0, 1.0)));
+					lerp(P_identity(p),	P_halfcylinder(p), clamp(2.0 * _vertexDeformation, 0.0, 1.0)) :
+					lerp(P_halfcylinder(p),	P_cylinder(p), clamp(2.0 * _vertexDeformation - 1.0, 0.0, 1.0)));
+					*/
 		}
 
 		//
