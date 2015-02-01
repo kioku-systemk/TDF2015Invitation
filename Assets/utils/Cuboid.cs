@@ -86,6 +86,7 @@ public class Cuboid {
 		cuboid.normals	= vertices.Select(x => x.n).ToArray();
 		cuboid.tangents	= vertices.Select(x => new Vector4(x.t.x, x.t.y, x.t.z, 0.0f)).ToArray();
 		cuboid.uv		= vertices.Select(x => x.uv).ToArray();
+		cuboid.uv2		= vertices.Select(x => new Vector2(1.0f, 1.0f) - x.uv).ToArray();
 		cuboid.colors	= vertices.Select(x => Color.white).ToArray();
 		cuboid.triangles = triangles.Where((v, i) => IsFaceIncluded(i, face)).ToArray();
 		return cuboid;
