@@ -141,7 +141,7 @@
 			float circumpherence2 = _maxLength * lerp(100.0, 1.0, pow(clamp(2.0 * rate - 1.0, 0.0, 1.0), 0.1));
 
 			float theta = TAU * p.x / circumpherence1;
-			float phi = TAU * p.y/circumpherence2;
+			float phi = TAU * p.y / circumpherence2;
 			float r1 = circumpherence1 / TAU;
 			float r2 = circumpherence2 / TAU;
 
@@ -152,7 +152,7 @@
 			return float3(x, y, z);
 		}
 
-		// Torus knot
+		// Torus knot --- TODO
 		float3 P_pq_torus(float2 p)
 		{
 			// TODO
@@ -214,7 +214,7 @@
 		void vert (inout appdata_full v) {
 			float4 p = v.vertex;
 
-			if (p.x > 20.0 && p.z > 20.0)
+			if (abs(p.x) > 10.0 && abs(p.z) > 10.0)
 			{
 			float4x4 transform = T(p.xz);
 			v.vertex = mul(p - float4(p.x, 0.0, p.z, 0.0), transform);

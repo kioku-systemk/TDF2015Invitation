@@ -158,7 +158,7 @@ public class City {
 				var patchWidth = Mathf.Min(idealPatchWidthInCells, cityWidthInCells - i);
 				var patchLength = Mathf.Min(idealPatchLengthInCells, cityLengthInCells - j);
 
-				GeneratePatch(patch, i, j, patchWidth, patchLength,
+				GeneratePatch(patch, i - cityWidthInCells / 2, j - cityLengthInCells / 2, patchWidth, patchLength,
 				              blockWidthInCells, blockLengthInCells, streetWidth,
 				              largeBlockWidthInCells, largeBlockLengthInCells, largeStreetWidth,
 				              cellWidth, cellLength,
