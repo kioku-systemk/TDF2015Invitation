@@ -45,40 +45,40 @@
 		};
 		// Additional values that can be put into Input structure:
 		//
-    	// float3 viewDir     - will contain view direction, for computing
-    	//                      Parallax effects, rim lighting etc.
+		// float3 viewDir     - will contain view direction, for computing
+		//                      Parallax effects, rim lighting etc.
 		//
-    	// float4 with COLOR semantic - will contain interpolated
-    	//                      per-vertex color.
+		// float4 with COLOR semantic - will contain interpolated
+		//                      per-vertex color.
 		//
-    	// float4 screenPos   - will contain screen space position for
-    	//                      reflection effects. Used by WetStreet
-    	//                      shader in Dark Unity for example.
+		// float4 screenPos   - will contain screen space position for
+		//                      reflection effects. Used by WetStreet
+		//                      shader in Dark Unity for example.
 		//
-    	// float3 worldPos    - will contain world space position.
+		// float3 worldPos    - will contain world space position.
 		//
-    	// float3 worldRefl   - will contain world reflection vector if
-    	//                      surface shader does not write to
-    	//                      o.Normal. See Reflect-Diffuse shader
-    	//                      for example.
+		// float3 worldRefl   - will contain world reflection vector if
+		//                      surface shader does not write to
+		//                      o.Normal. See Reflect-Diffuse shader
+		//                      for example.
 		//
-    	// float3 worldNormal - will contain world normal vector if
-    	//                      surface shader does not write to
-    	//                      o.Normal.
+		// float3 worldNormal - will contain world normal vector if
+		//                      surface shader does not write to
+		//                      o.Normal.
 		//
-    	// float3 worldRefl; INTERNAL_DATA - will contain world
-    	//                      reflection vector if surface shader
-    	//                      writes to o.Normal. To get the
-    	//                      reflection vector based on per-pixel
-    	//                      normal map, use WorldReflectionVector
-    	//                      (IN, o.Normal). See Reflect-Bumped
-    	//                      shader for example.
+		// float3 worldRefl; INTERNAL_DATA - will contain world
+		//                      reflection vector if surface shader
+		//                      writes to o.Normal. To get the
+		//                      reflection vector based on per-pixel
+		//                      normal map, use WorldReflectionVector
+		//                      (IN, o.Normal). See Reflect-Bumped
+		//                      shader for example.
 		//
-    	// float3 worldNormal; INTERNAL_DATA - will contain world
-    	//                      normal vector if surface shader writes
-    	//                      to o.Normal. To get the normal vector
-    	//                      based on per-pixel normal map, use
-    	//                      WorldNormalVector (IN, o.Normal).
+		// float3 worldNormal; INTERNAL_DATA - will contain world
+		//                      normal vector if surface shader writes
+		//                      to o.Normal. To get the normal vector
+		//                      based on per-pixel normal map, use
+		//                      WorldNormalVector (IN, o.Normal).
 
 		uniform float _vertexDeformation;
 		uniform float _waveHeight;
@@ -118,46 +118,36 @@
 
 			return float3(x, y, z);
 		}
-		
-		// Cylinder
-		float3 P_cylinder(float2 p)
-		{
-			float theta = TAU * p.x/_maxWidth;
-			float r = _maxLength/TAU;
 
-			float x = r * cos(theta) + r;
-			float y = r * sin(theta) + r;
+		// Cylinder
+		float3 P_cylinder(float2 p, float rate)
+		{
+			float circumpherence = _maxWidth * lerp(100.0, 1.0, pow(rate, 0.1));
+
+			float theta = TAU * p.x / circumpherence;
+			float r = circumpherence / TAU;
+
+			float x = r * sin(theta);
+			float y = r * -cos(theta) + r;
 			float z = p.y;
 
 			return float3(x, y, z);
 		}
 
-		// Torus2
-		float3 P_torus2(float2 p)
-		{
-			float theta = TAU * p.x/_maxWidth;
-			float phi = 0.5 * TAU * p.y/_maxLength;
-			float r1 = _maxWidth/TAU;
-			float r2 = _maxLength/TAU;
-
-			float x = (r1 * sin(theta) + r2) * -sin(phi) + r2;
-			float y = r1 * cos(theta) + r2;
-			float z = (r1 * sin(theta) + r2) * -cos(phi);
-
-			return float3(x, y, z);
-		}
-		
 		// Torus
-		float3 P_torus(float2 p)
+		float3 P_torus(float2 p, float rate)
 		{
-			float theta = TAU * p.x/_maxWidth;
-			float phi = TAU * p.y/_maxLength;
-			float r1 = _maxWidth/TAU;
-			float r2 = _maxLength/TAU;
+			float circumpherence1 = _maxWidth * lerp(100.0, 1.0, pow(clamp(2.0 * rate, 0.0, 1.0), 0.1));
+			float circumpherence2 = _maxLength * lerp(100.0, 1.0, pow(clamp(2.0 * rate - 1.0, 0.0, 1.0), 0.1));
 
-			float x = (r1 * sin(theta) + r2) * sin(phi);
-			float y = r1 * cos(theta);
-			float z = (r1 * sin(theta) + r2) * cos(phi);
+			float theta = TAU * p.x / circumpherence1;
+			float phi = TAU * p.y/circumpherence2;
+			float r1 = circumpherence1 / TAU;
+			float r2 = circumpherence2 / TAU;
+
+			float x = (r1 * -sin(theta) + r2) * -cos(phi) + r2;
+			float y = r1 * -cos(theta) + r1;
+			float z = (r1 * -sin(theta) + r2) * sin(phi);
 
 			return float3(x, y, z);
 		}
@@ -194,23 +184,15 @@
 		// Combined final equation
 		float3 P(float2 p)
 		{
-		
+			return P_torus(p, _vertexDeformation);
 			// TODO: more optimization?
-			return (_vertexDeformation < 0.25 ?
-					lerp(P_identity(p),	P_halfcylinder(p), clamp(4.0 * _vertexDeformation, 0.0, 1.0)) :
-					(_vertexDeformation < 0.5 ?
-						lerp(P_halfcylinder(p),	P_cylinder(p), clamp(4.0 * _vertexDeformation - 1.0, 0.0, 1.0)) :
-						(_vertexDeformation < 0.75 ?
-						lerp(P_cylinder(p),	P_torus2(p), clamp(4.0 * _vertexDeformation - 2.0, 0.0, 1.0)) :
-						lerp(P_torus2(p),	P_torus(p), clamp(4.0 * _vertexDeformation - 3.0, 0.0, 1.0))
-						))
-					);
-		
-		/*
-			return (_vertexDeformation < 0.5 ?
-					lerp(P_identity(p),	P_halfcylinder(p), clamp(2.0 * _vertexDeformation, 0.0, 1.0)) :
-					lerp(P_halfcylinder(p),	P_cylinder(p), clamp(2.0 * _vertexDeformation - 1.0, 0.0, 1.0)));
-					*/
+// 			return (_vertexDeformation < 0.25 ?
+// 					lerp(P_identity(p),	P_halfcylinder(p), clamp(4.0 * _vertexDeformation, 0.0, 1.0)) :
+// 					(_vertexDeformation < 0.5 ?
+// 						lerp(P_halfcylinder(p),	P_cylinder(p), clamp(4.0 * _vertexDeformation - 1.0, 0.0, 1.0)) :
+// 						lerp(P_cylinder(p),	P_torus(p), clamp(2.0 * _vertexDeformation - 1.0, 0.0, 1.0))
+// 					 )
+// 					);
 		}
 
 		//
@@ -232,7 +214,7 @@
 		void vert (inout appdata_full v) {
 			float4 p = v.vertex;
 
-			//if (p.z < 200.0)
+			if (p.x > 20.0 && p.z > 20.0)
 			{
 			float4x4 transform = T(p.xz);
 			v.vertex = mul(p - float4(p.x, 0.0, p.z, 0.0), transform);
@@ -267,7 +249,7 @@
 		float4 _Color;
 		//sampler2D _MainTex;
 		void surf (Input IN, inout SurfaceOutput o) {
-			o.Albedo = _Color * float4(awesomeShaderEffect(IN), 1.0); // * tex2D(_MainTex, IN.uv_MainTex).rgb;
+			o.Albedo = _Color;// * float4(awesomeShaderEffect(IN), 1.0); // * tex2D(_MainTex, IN.uv_MainTex).rgb;
 		}
 
 		// ---8<--------------------------------------------------------------
