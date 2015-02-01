@@ -105,17 +105,19 @@ public class City {
 		CombineInstance[] combine = new CombineInstance[patchWidthInCells * patchLengthInCells];
 
 		for (var j = 0; j < patchLengthInCells; ++j) {
-			var yStreets = (j + j0) / blockLengthInCells;
-			var yLargeStreets = (j + j0) / largeBlockLengthInCells;
+			var j1 = j + j0;
+			var yStreets = j1 < 0 ? (j1 + 1) / blockLengthInCells - 1 : j1 / blockLengthInCells;
+			var yLargeStreets = j1 < 0 ? (j1 + 1) / largeBlockLengthInCells - 1 : j1 / largeBlockLengthInCells;
 			var yStreetOffset = yStreets * streetWidth + yLargeStreets * largeStreetWidth;
 
 			for (var i = 0; i < patchWidthInCells; ++i) {
-				var xStreets = (i + i0) / blockWidthInCells;
-				var xLargeStreets = (i + i0) / largeBlockWidthInCells;
+				var i1 = i + i0;
+				var xStreets = i1 < 0 ? (i1 + 1) / blockWidthInCells - 1 : i1 / blockWidthInCells;
+				var xLargeStreets = i1 < 0 ? (i1 + 1) / largeBlockWidthInCells - 1 : i1 / largeBlockWidthInCells;
 				var xStreetOffset = xStreets * streetWidth + xLargeStreets * largeStreetWidth;
 
-				var x = cellWidth * (i + i0) + xStreetOffset;
-				var y = cellLength * (j + j0) + yStreetOffset;
+				var x = cellWidth * i1 + xStreetOffset;
+				var y = cellLength * j1 + yStreetOffset;
 
 				Building.BillboardDesc billboard = Building.BillboardDesc.None;
 				if (((i + i0) % largeBlockWidthInCells) == 0) { billboard = Building.BillboardDesc.Left; }
@@ -174,26 +176,5 @@ public class City {
 		                   blockWidthInCells, blockLengthInCells, streetWidth,
 		                   largeBlockWidthInCells, largeBlockLengthInCells, largeStreetWidth,
 		                   cellWidth, cellLength);
-	}
-
-	private static class ParametricFunction {
-		public static float X(float u, float v) { return u; }
-		public static float Y(float u, float v) { return 20.0f * Mathf.Sin(0.02f* u) * Mathf.Sin(0.04f * v); }
-		public static float Z(float u, float v) { return v; }
-
-		public static Vector4 P(float u, float v) { return new Vector4(X(u, v), Y(u, v), Z(u, v), 1.0f); }
-
-		public static Matrix4x4 T(float u, float v, float maxX, float maxY) {
-			var p = P(u, v);
-			var ux = (P(u + 0.001f, v) - p).normalized;
-			var uz = (P(u, v + 0.001f) - p).normalized;
-			var uy = Vector3.Cross(uz, ux);
-			var m = new Matrix4x4();
-			m.SetColumn(0, ux);
-			m.SetColumn(1, uy);
-			m.SetColumn(2, uz);
-			m.SetColumn(3, p);
-			return m;
-		}
 	}
 }

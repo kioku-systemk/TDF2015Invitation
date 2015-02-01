@@ -31,12 +31,13 @@ public class Building {
 		float topWidth =  Random.Range(trunkWidth * reduction * (1.0f - noise), trunkWidth);
 		float topLength = Random.Range(trunkLength * reduction * (1.0f - noise), trunkLength);
 
-		float trunkX =  Extensions.RandomAverage(0.0f, asymmetry * 0.5f * (maxWidth - trunkWidth));
-		float trunkY =  Extensions.RandomAverage(0.0f, asymmetry * 0.5f * (maxLength - trunkLength));
+		float trunkX = Extensions.RandomAverage(0.0f, asymmetry * 0.5f * (maxWidth - trunkWidth));
+		float trunkY = Extensions.RandomAverage(0.0f, asymmetry * 0.5f * (maxLength - trunkLength));
 		float topX =   Extensions.RandomAverage(0.0f, asymmetry * 0.5f * (trunkWidth - topWidth));
 		float topY =   Extensions.RandomAverage(0.0f, asymmetry * 0.5f * (trunkLength - topLength));
 
-		CombineInstance[] combine = new CombineInstance[3];//(billboard == BillboardDesc.None ? 2 : 3)];
+		//billboard = BillboardDesc.None;
+		CombineInstance[] combine = new CombineInstance[(billboard == BillboardDesc.None ? 2 : 3)];
 
 		// Top
 		combine[0].mesh = Cuboid.Create(new Vector3(topWidth, topHeight, topLength), (Cuboid.Face.all & ~Cuboid.Face.bottom));
@@ -46,7 +47,7 @@ public class Building {
 		combine[1].mesh = Cuboid.Create(new Vector3(trunkWidth, trunkHeight, trunkLength), (Cuboid.Face.all & ~Cuboid.Face.bottom));
 		combine[1].transform = Extensions.TranslationMatrix(trunkX, 0.5f * trunkHeight, trunkY);
 
-		//if (billboard != BillboardDesc.None)
+		if (billboard != BillboardDesc.None)
 		{
 			float billboardHeight = Random.Range(1.0f, Mathf.Max(1.0f, trunkHeight - floorHeight));
 			float billboardWidth =  (billboard == BillboardDesc.Left || billboard == BillboardDesc.Right ? 1.2f : 0.4f);
