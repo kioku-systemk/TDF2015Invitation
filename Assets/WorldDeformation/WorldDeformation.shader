@@ -1,7 +1,8 @@
 ﻿Shader "Custom/WorldDeformation" {
 	Properties {
 		_Color ("Main Color", Color) = (1,1,1,1)
-		//_MainTex ("Texture", 2D) = "white" {}
+		_FstTex ("1st texture", 2D) = "white" {}
+		_SndTex ("2nd texture", 2D) = "white" {}
 		_vertexDeformation ("vertex deformation", Range(0, 1.0)) = 0.0
 		_waveHeight ("wave height", Range(0, 20)) = 0.0
 		_xFreq ("X frequency", Range(0.0, 0.1)) = 0.02
@@ -10,8 +11,8 @@
 		_maxWidth ("Max width", Float) = 1.0
 		_maxLength ("Max length", Float) = 1.0
 
-		_effect1Intensity ("Effect 1 intensity", Range(0.0, 1.0)) = 0.0
-		_effect2Intensity ("Effect 2 intensity", Range(0.0, 1.0)) = 0.0
+		_effectWindowsLights ("Effect windows lights", Range(0.0, 1.0)) = 0.0
+		_effectEdgeGlow ("Effect edge glow", Range(0.0, 1.0)) = 0.0
 		_effect3Intensity ("Effect 3 intensity", Range(0.0, 1.0)) = 0.0
 		_effect4Intensity ("Effect 4 intensity", Range(0.0, 1.0)) = 0.0
 	}
@@ -40,7 +41,8 @@
 		// be named "uv" followed by texture name (or start it with
 		// "uv2" to use second texture coordinate set).
 		struct Input {
-			float2 uv_MainTex;
+			float2 uv_FstTex	: TEXCOORD0; // We use uv to store barycentric coordinates :)
+			float2 uv2_SndTex	: TEXCOORD1;
 			float3 worldPos;
 		};
 		// Additional values that can be put into Input structure:
@@ -87,8 +89,9 @@
 		uniform float _speed;
 		uniform float _maxWidth;
 		uniform float _maxLength;
-		uniform float _effect1Intensity;
-		uniform float _effect2Intensity;
+
+		uniform float _effectWindowsLights;
+		uniform float _effectEdgeGlow;
 		uniform float _effect3Intensity;
 		uniform float _effect4Intensity;
 
@@ -214,42 +217,68 @@
 		void vert (inout appdata_full v) {
 			float4 p = v.vertex;
 
-			if (abs(p.x) > 10.0 && abs(p.z) > 10.0)
-			{
+// 			if (abs(p.x) > 10.0 && abs(p.z) > 10.0)
+// 			{
 			float4x4 transform = T(p.xz);
 			v.vertex = mul(p - float4(p.x, 0.0, p.z, 0.0), transform);
 			v.normal = mul(float4(v.normal, 0.0), transform).xyz;
-			}
+			v.tangent = mul(v.tangent, transform);
+// 			}
 		}
 
 		// ---8<--------------------------------------------------------------
 		// Fragment shading
 
+		float hash(float2 uv)
+		{
+			return frac(sin(dot(uv, float2(12.9898,78.233))) * 43758.5453);
+		}
+
+		float3 Windows(Input IN)
+		{
+			float2 windowId = floor(float2(5.0, 10.0) * IN.uv_FstTex);
+			float hashValue = hash(windowId);
+
+			float trigger = hashValue * 2.5; // x2 because we don't want everything to be lit
+			float3 lightColor = frac(10.0*hashValue) > 0.4 ? float3(0.7, 0.8, 1.0) : float3(1.0, 0.9, 0.6); // Blue neon or yellow neon
+
+			float windows = (smoothstep(0.25, 0.2, abs(frac(10.0 * IN.uv_FstTex.x) - 0.5)) *
+							 smoothstep(0.25, 0.2, abs(frac(10.0 * IN.uv_FstTex.y) - 0.5)));
+			return lightColor * windows * smoothstep(trigger, trigger + 0.1, _effectWindowsLights);
+		}
+
+		float3 GlowEdges(Input IN)
+		{
+			float edges = 1.0 - (smoothstep(0.04, 0.05, frac(IN.uv_FstTex.x)) *
+								 smoothstep(0.04, 0.05, frac(IN.uv2_SndTex.x)) *
+								 smoothstep(0.04, 0.05, frac(IN.uv_FstTex.y)) *
+								 smoothstep(0.04, 0.05, frac(IN.uv2_SndTex.y)));
+			return float3(0.0, 0.45, 0.89) * edges * _effectEdgeGlow;
+		}
+
 		//
 		// TODO
 		//
-		float3 awesomeShaderEffect(Input IN)
+		float3 awesomeShaderEffect(Input IN, inout SurfaceOutput o)
 		{
-			float3 superEffect1 = float3(0.8, 0.0, 0.3) * frac(2.0 * _Time.y);
-
-			float3 superEffect2 = float3(0.3, 0.8, 0.0) *
+			float3 superEffect3 = float3(0.3, 0.8, 0.0) *
 				((floor(0.5 * IN.worldPos.x) - 2.0 * floor(0.25 * IN.worldPos.x)) *
 				 (floor(0.5 * IN.worldPos.y) - 2.0 * floor(0.25 * IN.worldPos.y)) *
 				 (floor(0.5 * IN.worldPos.z) - 2.0 * floor(0.25 * IN.worldPos.z)));
 
-			float3 superEffect3 = float3(0.0, 0.3, 0.8) * IN.uv_MainTex.x;
-			float3 superEffect4 = float3(0.6, 0.6, 0.6);
+			float3 superEffect4 = float3(0.8, 0.0, 0.3) * IN.uv_FstTex.x;
 
-			return (_effect1Intensity * superEffect1 +
-					_effect2Intensity * superEffect2 +
-					_effect3Intensity * superEffect3 +
+			return (_effect3Intensity * superEffect3 +
 					_effect4Intensity * superEffect4);
 		}
 
 		float4 _Color;
-		//sampler2D _MainTex;
+		sampler2D _FstTex;
+		sampler2D _SndTex;
 		void surf (Input IN, inout SurfaceOutput o) {
-			o.Albedo = _Color;// * float4(awesomeShaderEffect(IN), 1.0); // * tex2D(_MainTex, IN.uv_MainTex).rgb;
+			o.Emission = Windows(IN) + GlowEdges(IN);
+			o.Albedo = _Color * float4(float3(0.1, 0.1, 0.1),
+									   1.0);// * float4(awesomeShaderEffect(IN), 1.0); // * tex2D(_MainTex, IN.uv_MainTex).rgb;
 		}
 
 		// ---8<--------------------------------------------------------------
