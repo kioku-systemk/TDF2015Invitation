@@ -44,6 +44,7 @@
 		// be named "uv" followed by texture name (or start it with
 		// "uv2" to use second texture coordinate set).
 		struct Input {
+			fixed4 color		: COLOR;
 			float2 uv_fstTex	: TEXCOORD0; // We use uv to store barycentric coordinates :)
 			float2 uv2_sndTex	: TEXCOORD1;
 			float3 worldPos;
@@ -241,19 +242,30 @@
 			return frac(sin(dot(uv, float2(12.9898,78.233))) * 43758.5453);
 		}
 
+		float3 DebugUV(Input IN)
+		{
+			float x = (frac(IN.uv_fstTex.x) *
+					   frac(IN.uv_fstTex.y));
+
+			return x * float3(1.0, 0.0, 0.5);
+		}
+
 		float3 Windows(Input IN)
 		{
-			float2 windowId = floor(float2(5.0, 10.0) * IN.uv_fstTex);
+			// Not sure why I need this trick. Without the floor + x256, I get ugly artifacts.
+			float2 seed = floor(256.0 * IN.color.xy);
+
+			float2 windowId = floor(float2(0.5, 1.0) * IN.uv_fstTex) + seed;
 			float hashValue = hash(windowId);
 
-			float3 lightColor = lerp(_neonBlueColor, _neonYellowColor, smoothstep(0.0, 1.0, frac(10.0*hashValue))) ;//frac(10.0*hashValue) > 0.4 ? _neonBlueColor : _neonYellowColor; // Blue neon or yellow neon
+			float3 lightColor = lerp(_neonBlueColor, _neonYellowColor, smoothstep(0.0, 1.0, frac(10.0*hashValue))); // Blue neon or yellow neon
 			float intensity = lerp(0.6, 1.0, clamp(2.0 * hashValue, 0.0, 1.0));
 			float trigger = hashValue * 2.5; // x2 because we don't want everything to be lit
 
-			float windows = (smoothstep(0.25, 0.2, abs(frac(10.0 * IN.uv_fstTex.x) - 0.5)) *
-							 smoothstep(0.25, 0.2, abs(frac(10.0 * IN.uv_fstTex.y) - 0.5)));
+			float windows = (smoothstep(0.25, 0.2, abs(frac(IN.uv_fstTex.x) - 0.5)) *
+							 smoothstep(0.25, 0.2, abs(frac(IN.uv_fstTex.y) - 0.5)));
 
-			return lightColor * windows * intensity * smoothstep(trigger, trigger + 0.05, _effectWindowsLights);
+			return lightColor * windows * intensity * smoothstep(trigger, trigger + 0.01, _effectWindowsLights);
 		}
 
 		float3 GlowEdges(Input IN)
@@ -284,9 +296,9 @@
 		sampler2D _fstTex;
 		sampler2D _sndTex;
 		void surf (Input IN, inout SurfaceOutput o) {
+			//o.Emission = DebugUV(IN);
 			o.Emission = Windows(IN) + GlowEdges(IN);
-			o.Albedo = _color * float4(0.05 * float3(1.0, 1.0, 1.0),
- 									   1.0);// * float4(awesomeShaderEffect(IN), 1.0); // * tex2D(_MainTex, IN.uv_MainTex).rgb;
+			o.Albedo = 0.1*_color;// * float4(awesomeShaderEffect(IN), 1.0);
 		}
 
 		// ---8<--------------------------------------------------------------

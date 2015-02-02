@@ -55,8 +55,12 @@ public class City {
 
 		for (var j = 0; j < blockLengthInCells; ++j) {
 			for (var i = 0; i < blockWidthInCells; ++i) {
-				Random.seed = Hash.Get(Hash.Get(i) + j);
 				int index = i + j * blockWidthInCells;
+				var seed = Hash.Get(Hash.Get(i) + j);
+				Random.seed = seed;
+				Vector3 tag = new Vector3((float)i / (float)blockWidthInCells,
+										  (float)j / (float)blockLengthInCells,
+										  (float)seed / 256.0f);
 
 				Building.BillboardDesc billboard = Building.BillboardDesc.None;
 				if (i == 0) { billboard = Building.BillboardDesc.Left; }
@@ -64,7 +68,7 @@ public class City {
 				else if (i == blockWidthInCells - 1) { billboard = Building.BillboardDesc.Right; }
 				else if (j == blockLengthInCells - 1) { billboard = Building.BillboardDesc.Back; }
 
-				combine[index].mesh = Building.Generate(buildingAverageHeight, cellWidth, cellLength, noise, new Vector2(styleA, styleB), billboard);
+				combine[index].mesh = Building.Generate(buildingAverageHeight, cellWidth, cellLength, noise, new Vector2(styleA, styleB), tag, billboard);
 				combine[index].transform = Extensions.TranslationMatrix(cellWidth * i, 0.0f, cellLength * j);
 			}
 		}
@@ -125,9 +129,13 @@ public class City {
 				else if (((j + j0) % largeBlockLengthInCells) == 0) { billboard = Building.BillboardDesc.Front; }
 				else if (((j + j0 + 1) % largeBlockLengthInCells) == 0) { billboard = Building.BillboardDesc.Back; }
 
-				Random.seed = Hash.Get(Hash.Get(i) + j);
 				int index = i + j * patchWidthInCells;
-				combine[index].mesh = Building.Generate(buildingAverageHeight, cellWidth, cellLength, noise, new Vector2(styleA, styleB), billboard);
+				var seed = Hash.Get(Hash.Get(i) + j);
+				Random.seed = seed;
+				Vector3 tag = new Vector3((float)i / (float)patchWidthInCells,
+										  (float)j / (float)patchLengthInCells,
+										  (float)seed / 256.0f);
+				combine[index].mesh = Building.Generate(buildingAverageHeight, cellWidth, cellLength, noise, new Vector2(styleA, styleB), tag, billboard);
 				combine[index].transform = Extensions.TranslationMatrix(x, 0.0f, y); // ParametricFunction.T(x, y, maxX, maxY);
 			}
 		}

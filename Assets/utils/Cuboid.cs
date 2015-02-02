@@ -91,4 +91,25 @@ public class Cuboid {
 		cuboid.triangles = triangles.Where((v, i) => IsFaceIncluded(i, face)).ToArray();
 		return cuboid;
 	}
+
+	public static Mesh CreateWithUVGrid(Vector3 size, Vector3 unit, Vector3 tag, Face face)
+	{
+		Mesh cuboid = new Mesh();
+		cuboid.name = "CuboidWithUVGrid";
+		cuboid.vertices	= vertices.Select(x => new Vector3(x.p.x * size.x, x.p.y * size.y, x.p.z * size.z)).ToArray();
+		cuboid.normals	= vertices.Select(x => x.n).ToArray();
+		cuboid.tangents	= vertices.Select(x => new Vector4(x.t.x, x.t.y, x.t.z, 0.0f)).ToArray();
+
+		Vector3 scale = new Vector3(Mathf.Ceil(size.x / unit.x) * unit.x,
+									Mathf.Ceil(size.y / unit.y) * unit.y,
+									Mathf.Ceil(size.z / unit.z) * unit.z);
+
+		cuboid.uv		= vertices.Select((x, i) => (i/4 == 3 || i/4 == 5) ? x.uv : new Vector2(x.uv.x * scale.x, x.uv.y * scale.y)).ToArray();
+		cuboid.uv2		= vertices.Select(x => new Vector2((1.0f - x.uv.x) * scale.x, (1.0f - x.uv.y) * scale.y)).ToArray();
+
+		Color color = new Color(tag.x, tag.y, tag.z);
+		cuboid.colors	= vertices.Select((x, i) => (i/4 == 3 || i/4 == 5) ? Color.white : color).ToArray();
+		cuboid.triangles = triangles.Where((v, i) => IsFaceIncluded(i, face)).ToArray();
+		return cuboid;
+	}
 }
