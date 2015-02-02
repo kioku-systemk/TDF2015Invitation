@@ -34,6 +34,20 @@ Material:
           m_Texture: {fileID: 0}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _fstTex
+        second:
+          m_Texture: {fileID: 0}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _sndTex
+        second:
+          m_Texture: {fileID: 0}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
     m_Floats:
       data:
         first:
@@ -74,11 +88,11 @@ Material:
       data:
         first:
           name: _effect3Intensity
-        second: 0
+        second: 1
       data:
         first:
           name: _effect4Intensity
-        second: 0
+        second: 1
       data:
         first:
           name: _a
@@ -98,13 +112,25 @@ Material:
       data:
         first:
           name: _effectEdgeGlow
-        second: .25999999
+        second: 0
       data:
         first:
           name: _effectWindowsLights
-        second: .360000014
+        second: 1
     m_Colors:
       data:
         first:
           name: _Color
         second: {r: .490294993, g: .713235259, b: .361862004, a: 1}
+      data:
+        first:
+          name: _color
+        second: {r: 1, g: 1, b: 1, a: 1}
+      data:
+        first:
+          name: _neonBlueColor
+        second: {r: 1, g: 1, b: 1, a: 1}
+      data:
+        first:
+          name: _neonYellowColor
+        second: {r: 1, g: 1, b: 1, a: 1}

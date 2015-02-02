@@ -17,7 +17,6 @@ public class WorldDeformation : MonoBehaviour {
 		m.SetFloat("_yFreq", parameters.y_freq);
 		m.SetFloat("_speed", parameters.speed);
 
-		m.SetFloat("_effectWindowsLights",	parameters.effect_windows_lights);
 		m.SetFloat("_effectEdgeGlow",		parameters.effect_edge_glow);
 		m.SetFloat("_effect3Intensity",		parameters.effect3_intensity);
 		m.SetFloat("_effect4Intensity",		parameters.effect4_intensity);

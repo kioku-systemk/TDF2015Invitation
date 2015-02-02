@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Concrete
+  m_Name: Building
   m_Shader: {fileID: 4800000, guid: 91fb47593752ad84c99c8d9db36dcfec, type: 3}
   m_ShaderKeywords: []
   m_CustomRenderQueue: -1
@@ -30,6 +30,20 @@ Material:
       data:
         first:
           name: _SndTex
+        second:
+          m_Texture: {fileID: 0}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _fstTex
+        second:
+          m_Texture: {fileID: 0}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _sndTex
         second:
           m_Texture: {fileID: 0}
           m_Scale: {x: 1, y: 1}
@@ -74,11 +88,11 @@ Material:
       data:
         first:
           name: _effect3Intensity
-        second: 0
+        second: 1
       data:
         first:
           name: _effect4Intensity
-        second: 0
+        second: 1
       data:
         first:
           name: _a
@@ -102,13 +116,25 @@ Material:
       data:
         first:
           name: _effectEdgeGlow
-        second: .25999999
+        second: 0
       data:
         first:
           name: _effectWindowsLights
-        second: .360000014
+        second: 1
     m_Colors:
       data:
         first:
           name: _Color
         second: {r: .79411763, g: .771888793, b: .724048436, a: 1}
+      data:
+        first:
+          name: _color
+        second: {r: 1, g: 1, b: 1, a: 1}
+      data:
+        first:
+          name: _neonBlueColor
+        second: {r: .639705896, g: .821095407, b: 1, a: 1}
+      data:
+        first:
+          name: _neonYellowColor
+        second: {r: 1, g: .869371176, b: .588235259, a: 1}

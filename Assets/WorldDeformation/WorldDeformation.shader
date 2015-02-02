@@ -1,8 +1,11 @@
 ﻿Shader "Custom/WorldDeformation" {
 	Properties {
-		_Color ("Main Color", Color) = (1,1,1,1)
-		_FstTex ("1st texture", 2D) = "white" {}
-		_SndTex ("2nd texture", 2D) = "white" {}
+		_color ("Main Color", Color) = (1,1,1,1)
+		_neonBlueColor ("Neon blue color", Color) = (1,1,1,1)
+		_neonYellowColor ("Neon yellow color", Color) = (1,1,1,1)
+
+		_fstTex ("1st texture", 2D) = "white" {}
+		_sndTex ("2nd texture", 2D) = "white" {}
 		_vertexDeformation ("vertex deformation", Range(0, 1.0)) = 0.0
 		_waveHeight ("wave height", Range(0, 20)) = 0.0
 		_xFreq ("X frequency", Range(0.0, 0.1)) = 0.02
@@ -11,7 +14,7 @@
 		_maxWidth ("Max width", Float) = 1.0
 		_maxLength ("Max length", Float) = 1.0
 
-		_effectWindowsLights ("Effect windows lights", Range(0.0, 1.0)) = 0.0
+		_effectWindowsLights ("Windows lights", Range(0.0, 1.0)) = 0.0
 		_effectEdgeGlow ("Effect edge glow", Range(0.0, 1.0)) = 0.0
 		_effect3Intensity ("Effect 3 intensity", Range(0.0, 1.0)) = 0.0
 		_effect4Intensity ("Effect 4 intensity", Range(0.0, 1.0)) = 0.0
@@ -41,8 +44,8 @@
 		// be named "uv" followed by texture name (or start it with
 		// "uv2" to use second texture coordinate set).
 		struct Input {
-			float2 uv_FstTex	: TEXCOORD0; // We use uv to store barycentric coordinates :)
-			float2 uv2_SndTex	: TEXCOORD1;
+			float2 uv_fstTex	: TEXCOORD0; // We use uv to store barycentric coordinates :)
+			float2 uv2_sndTex	: TEXCOORD1;
 			float3 worldPos;
 		};
 		// Additional values that can be put into Input structure:
@@ -81,6 +84,10 @@
 		//                      to o.Normal. To get the normal vector
 		//                      based on per-pixel normal map, use
 		//                      WorldNormalVector (IN, o.Normal).
+
+		uniform float4 _color;
+		uniform float4 _neonBlueColor;
+		uniform float4 _neonYellowColor;
 
 		uniform float _vertexDeformation;
 		uniform float _waveHeight;
@@ -236,23 +243,25 @@
 
 		float3 Windows(Input IN)
 		{
-			float2 windowId = floor(float2(5.0, 10.0) * IN.uv_FstTex);
+			float2 windowId = floor(float2(5.0, 10.0) * IN.uv_fstTex);
 			float hashValue = hash(windowId);
 
+			float3 lightColor = lerp(_neonBlueColor, _neonYellowColor, smoothstep(0.0, 1.0, frac(10.0*hashValue))) ;//frac(10.0*hashValue) > 0.4 ? _neonBlueColor : _neonYellowColor; // Blue neon or yellow neon
+			float intensity = lerp(0.6, 1.0, clamp(2.0 * hashValue, 0.0, 1.0));
 			float trigger = hashValue * 2.5; // x2 because we don't want everything to be lit
-			float3 lightColor = frac(10.0*hashValue) > 0.4 ? float3(0.7, 0.8, 1.0) : float3(1.0, 0.9, 0.6); // Blue neon or yellow neon
 
-			float windows = (smoothstep(0.25, 0.2, abs(frac(10.0 * IN.uv_FstTex.x) - 0.5)) *
-							 smoothstep(0.25, 0.2, abs(frac(10.0 * IN.uv_FstTex.y) - 0.5)));
-			return lightColor * windows * smoothstep(trigger, trigger + 0.1, _effectWindowsLights);
+			float windows = (smoothstep(0.25, 0.2, abs(frac(10.0 * IN.uv_fstTex.x) - 0.5)) *
+							 smoothstep(0.25, 0.2, abs(frac(10.0 * IN.uv_fstTex.y) - 0.5)));
+
+			return lightColor * windows * intensity * smoothstep(trigger, trigger + 0.05, _effectWindowsLights);
 		}
 
 		float3 GlowEdges(Input IN)
 		{
-			float edges = 1.0 - (smoothstep(0.04, 0.05, frac(IN.uv_FstTex.x)) *
-								 smoothstep(0.04, 0.05, frac(IN.uv2_SndTex.x)) *
-								 smoothstep(0.04, 0.05, frac(IN.uv_FstTex.y)) *
-								 smoothstep(0.04, 0.05, frac(IN.uv2_SndTex.y)));
+			float edges = 1.0 - (smoothstep(0.04, 0.05, frac(IN.uv_fstTex.x)) *
+								 smoothstep(0.04, 0.05, frac(IN.uv2_sndTex.x)) *
+								 smoothstep(0.04, 0.05, frac(IN.uv_fstTex.y)) *
+								 smoothstep(0.04, 0.05, frac(IN.uv2_sndTex.y)));
 			return float3(0.0, 0.45, 0.89) * edges * _effectEdgeGlow;
 		}
 
@@ -266,19 +275,18 @@
 				 (floor(0.5 * IN.worldPos.y) - 2.0 * floor(0.25 * IN.worldPos.y)) *
 				 (floor(0.5 * IN.worldPos.z) - 2.0 * floor(0.25 * IN.worldPos.z)));
 
-			float3 superEffect4 = float3(0.8, 0.0, 0.3) * IN.uv_FstTex.x;
+			float3 superEffect4 = float3(0.8, 0.0, 0.3) * IN.uv_fstTex.x;
 
 			return (_effect3Intensity * superEffect3 +
 					_effect4Intensity * superEffect4);
 		}
 
-		float4 _Color;
-		sampler2D _FstTex;
-		sampler2D _SndTex;
+		sampler2D _fstTex;
+		sampler2D _sndTex;
 		void surf (Input IN, inout SurfaceOutput o) {
 			o.Emission = Windows(IN) + GlowEdges(IN);
-			o.Albedo = _Color * float4(float3(0.1, 0.1, 0.1),
-									   1.0);// * float4(awesomeShaderEffect(IN), 1.0); // * tex2D(_MainTex, IN.uv_MainTex).rgb;
+			o.Albedo = _color * float4(0.05 * float3(1.0, 1.0, 1.0),
+ 									   1.0);// * float4(awesomeShaderEffect(IN), 1.0); // * tex2D(_MainTex, IN.uv_MainTex).rgb;
 		}
 
 		// ---8<--------------------------------------------------------------

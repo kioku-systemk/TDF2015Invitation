@@ -23,9 +23,6 @@ public class WorldDeformationParameters : MonoBehaviour {
 	// ---8<------------------------------------------------------------------
 
 	[Range(0.0f, 1.0f)]
-	public float effect_windows_lights = 0.0f;
-
-	[Range(0.0f, 1.0f)]
 	public float effect_edge_glow = 0.0f;
 
 	[Range(0.0f, 1.0f)]
