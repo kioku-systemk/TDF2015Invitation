@@ -5,7 +5,7 @@ AnimatorController:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: City Test
+  m_Name: Timeline
   serializedVersion: 2
   m_AnimatorParameters: []
   m_AnimatorLayers:
@@ -25,11 +25,11 @@ State:
   m_ObjectHideFlags: 3
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: CityTestAnimation
+  m_Name: Animation
   m_Speed: 1
   m_CycleOffset: 0
   m_Motions:
-  - {fileID: 7400000, guid: c895887e0db2c07418952a4d87026f7c, type: 2}
+  - {fileID: 7400000, guid: 537b5b4a549d74d479e8961cb8efcd0b, type: 2}
   m_ParentStateMachine: {fileID: 110700000}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
