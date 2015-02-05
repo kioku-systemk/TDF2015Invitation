@@ -107,6 +107,8 @@
 		uniform float _effect3Intensity;
 		uniform float _effect4Intensity;
 
+        float4 _spectrum;
+
 		// ---8<--------------------------------------------------------------
 		// Vertex shading
 
@@ -302,6 +304,7 @@
 		void surf (Input IN, inout SurfaceOutput o) {
 			//o.Emission = DebugUV(IN);
 			o.Emission = Windows(IN) + GlowEdges(IN);
+            o.Emission += _spectrum * 0.25;
 			o.Albedo = _color;// * float4(awesomeShaderEffect(IN), 1.0);
 		}
 
