@@ -24,6 +24,10 @@
 
 		CGPROGRAM
 
+        #ifdef SHADER_API_OPENGL 
+            #pragma glsl
+        #endif
+
 		// From documentation:
 		// http://docs.unity3d.com/Manual/SL-SurfaceShaders.html
 		//
