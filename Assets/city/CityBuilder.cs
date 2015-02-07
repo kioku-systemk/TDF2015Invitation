@@ -7,21 +7,13 @@ using System.Collections.Generic;
 [RequireComponent(typeof(MeshFilter))]
 public class CityBuilder : MonoBehaviour {
 
-	public GameObject patchObject = null;
+	public GameObject BuildingPatch = null;
 
 	[Range(1, 100)]
 	public int city_width = 10;
 
 	[Range(1, 100)]
 	public int city_length = 10;
-
-	/*
-	[Range(1, 20)]
-	public int ideal_patch_width = 10;
-
-	[Range(1, 20)]
-	public int ideal_patch_length = 10;
-	*/
 
 	[Range(1, 50)]
 	public int block_width = 2;
@@ -68,8 +60,6 @@ public class CityBuilder : MonoBehaviour {
 		var hash = 0;
 		hash = (city_width.GetHashCode() + hash).GetHashCode();
 		hash = (city_length.GetHashCode() + hash).GetHashCode();
-		//hash = (ideal_patch_width.GetHashCode() + hash).GetHashCode();
-		//hash = (ideal_patch_length.GetHashCode() + hash).GetHashCode();
 		hash = (block_width.GetHashCode() + hash).GetHashCode();
 		hash = (block_length.GetHashCode() + hash).GetHashCode();
 		hash = (street_width.GetHashCode() + hash).GetHashCode();
@@ -93,11 +83,11 @@ public class CityBuilder : MonoBehaviour {
  		}
 		hash = newHash;
 
-
-		List<Mesh> meshes = new List<Mesh>();
-		City.Size size = City.GenerateCity(meshes,
+		List<Mesh> buildingsMeshes = new List<Mesh>();
+		List<Mesh> billboardsMeshes = new List<Mesh>();
+		City.Size size = City.GenerateCity(buildingsMeshes, billboardsMeshes,
 		                                   city_width, city_length,
-		                                   20, 20, //ideal_patch_width, ideal_patch_length,
+		                                   20, 20,
 		                                   block_width, block_length, street_width,
 		                                   large_block_width, large_block_length, large_street_width,
 		                                   cell_width, cell_length, average_height,
@@ -105,7 +95,13 @@ public class CityBuilder : MonoBehaviour {
 		width = size.width;
 		length = size.length;
 
-		var numberOfMeshes = meshes.Count;
+ 		ApplyMeshes(BuildingPatch, buildingsMeshes, billboardsMeshes);
+	}
+
+	private void ApplyMeshes(GameObject patchObject,
+							 List<Mesh> buildingsMeshes,
+							 List<Mesh> billboadsMeshes) {
+		var numberOfMeshes = buildingsMeshes.Count;
 
 		// Destroy over numbered children
 		for (var i = transform.childCount - 1; i >= numberOfMeshes; --i) {
@@ -119,14 +115,18 @@ public class CityBuilder : MonoBehaviour {
 		}
 
 		// At this point, we have the right number of children
-		for (var i = 0; i < numberOfMeshes; ++i)
-		{
-			var meshFilter = transform.GetChild(i).GetComponent<MeshFilter>();
+		for (var i = 0; i < numberOfMeshes; ++i) {
+			var child = transform.GetChild(i);
+			var meshFilter = child.GetComponent<MeshFilter>();
 
 			// Hack to avoid culling of shaded vertices;
 			// FIXME: deduce bounding box from deformation.
-			meshFilter.sharedMesh = meshes[i];
+			meshFilter.sharedMesh = buildingsMeshes[i];
 			meshFilter.sharedMesh.bounds = new Bounds(Vector3.zero, 2000.0f * Vector3.one);
+
+			var subMeshFilter = child.GetChild(0).GetComponent<MeshFilter>();
+			subMeshFilter.sharedMesh = billboadsMeshes[i];
+			subMeshFilter.sharedMesh.bounds = new Bounds(Vector3.zero, 2000.0f * Vector3.one);
 		}
 	}
 
@@ -140,9 +140,9 @@ public class CityBuilder : MonoBehaviour {
 
 	private void Update () {
 		Create ();
-		var material = GetComponent<Renderer>().sharedMaterial;
-		material.SetFloat("_time", Time.time);
-		material.SetFloat("_maxWidth", width);
-		material.SetFloat("_maxLength", length);
+// 		var material = GetComponent<Renderer>().sharedMaterial;
+// 		material.SetFloat("_time", Time.time);
+// 		material.SetFloat("_maxWidth", width);
+// 		material.SetFloat("_maxLength", length);
 	}
 }

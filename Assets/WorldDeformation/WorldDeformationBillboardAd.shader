@@ -1,8 +1,10 @@
 ﻿Shader "Custom/WorldDeformation" {
 	Properties {
 		_color ("Main Color", Color) = (1,1,1,1)
-		_neonBlueColor ("Neon blue color", Color) = (1,1,1,1)
-		_neonYellowColor ("Neon yellow color", Color) = (1,1,1,1)
+		_adColor1 ("Ad color 1", Color) = (1,1,1,1)
+		_adColor2 ("Ad color 2", Color) = (1,1,1,1)
+		_adColor3 ("Ad color 3", Color) = (1,1,1,1)
+		_adColor4 ("Ad color 4", Color) = (1,1,1,1)
 
 		_fstTex ("1st texture", 2D) = "white" {}
 		_sndTex ("2nd texture", 2D) = "white" {}
@@ -11,9 +13,9 @@
 		_maxWidth ("Max width", Float) = 1.0
 		_maxLength ("Max length", Float) = 1.0
 
-		_effectWindowsLights ("Windows lights", Range(0.0, 1.0)) = 0.0
-		_effectEdgeGlow ("Edge glow", Range(0.0, 1.0)) = 0.0
-		// _effectBillboardAd ("Billboard Ad", Range(0.0, 1.0)) = 0.0
+		// _effectWindowsLights ("Windows lights", Range(0.0, 1.0)) = 0.0
+		// _effectEdgeGlow ("Effect edge glow", Range(0.0, 1.0)) = 0.0
+		_effectBillboardAd ("Billboard Ad", Range(0.0, 1.0)) = 0.0
 	}
 	SubShader {
 		Tags { "RenderType" = "Opaque" }
@@ -87,18 +89,20 @@
 		//                      WorldNormalVector (IN, o.Normal).
 
 		uniform float4 _color;
-		uniform float4 _neonBlueColor;
-		uniform float4 _neonYellowColor;
+		uniform float4 _adColor1;
+		uniform float4 _adColor2;
+		uniform float4 _adColor3;
+		uniform float4 _adColor4;
 
 		uniform float _vertexDeformation;
 		uniform float _maxWidth;
 		uniform float _maxLength;
 
-		uniform float _effectWindowsLights;
-		uniform float _effectEdgeGlow;
-		// uniform float _effectBillboardAd;
+		// uniform float _effectWindowsLights;
+		// uniform float _effectEdgeGlow;
+		uniform float _effectBillboardAd;
 
-		float4 _spectrum;
+        float4 _spectrum;
 
 		// ---8<--------------------------------------------------------------
 		// Vertex shading
@@ -198,40 +202,26 @@
 			return x * float3(1.0, 0.0, 0.5);
 		}
 
-		float3 Windows(Input IN)
+		float3 GlowAd(Input IN)
 		{
-			// Not sure why I need this trick. Without the floor + x256, I get ugly artifacts.
-			float2 seed = floor(256.0 * IN.color.xy);
+			// Not sure why I need this trick. Why the ugly artifacts?
+			float2 adId = floor(4.0 * IN.color.xy);
+			float hashValue = hash(adId);
 
-			float2 windowId = floor(float2(0.5, 1.0) * IN.uv_fstTex) + seed;
-			float hashValue = hash(windowId);
+			float3 color1 = lerp(_adColor1.xyz, _adColor2.xyz, smoothstep(0.49, 0.51, hashValue));
+			float3 color2 = lerp(_adColor3.xyz, _adColor4.xyz, smoothstep(0.49, 0.51, hashValue));
+			float3 color = lerp(color1, color2, smoothstep(0.49, 0.51, abs(2.0 * hashValue - 1.0)));
 
-			float3 lightColor = lerp(_neonBlueColor, _neonYellowColor, smoothstep(0.0, 1.0, frac(10.0*hashValue))); // Blue neon or yellow neon
-			float intensity = lerp(0.6, 1.0, clamp(2.0 * hashValue, 0.0, 1.0));
-			float trigger = hashValue * 2.5; // x2 because we don't want everything to be lit
-
-			float windows = (smoothstep(0.25, 0.2, abs(frac(IN.uv_fstTex.x) - 0.5)) *
-							 smoothstep(0.25, 0.2, abs(frac(IN.uv_fstTex.y) - 0.5)));
-
-			return lightColor * windows * intensity * smoothstep(trigger, trigger + 0.01, _effectWindowsLights);
-		}
-
-		float3 GlowEdges(Input IN)
-		{
-			float edges = 1.0 - (smoothstep(0.04, 0.05, frac(IN.uv_fstTex.x)) *
-								 smoothstep(0.04, 0.05, frac(IN.uv2_sndTex.x)) *
-								 smoothstep(0.04, 0.05, frac(IN.uv_fstTex.y)) *
-								 smoothstep(0.04, 0.05, frac(IN.uv2_sndTex.y)));
-			return float3(0.0, 0.45, 0.89) * edges * _effectEdgeGlow;
+			return color * _effectBillboardAd;
 		}
 
 		sampler2D _fstTex;
 		sampler2D _sndTex;
 		void surf (Input IN, inout SurfaceOutput o) {
 			//o.Emission = DebugUV(IN);
-			o.Emission = Windows(IN) + GlowEdges(IN);
-			//o.Emission += _spectrum * 0.25;
-			o.Albedo = _color;// * float4(awesomeShaderEffect(IN), 1.0);
+			o.Emission = GlowAd(IN);
+            //o.Emission += _spectrum * 0.25;
+			o.Albedo = _color * lerp(1.0, 0.4, _effectBillboardAd);// * float4(awesomeShaderEffect(IN), 1.0);
 		}
 
 		// ---8<--------------------------------------------------------------

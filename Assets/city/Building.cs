@@ -1,6 +1,13 @@
 using UnityEngine;
 
 public class Building {
+
+	public class Meshes
+	{
+		public Mesh Building = new Mesh();
+		public Mesh BillboardAd = new Mesh();
+	};
+
 	public enum BillboardDesc {
 		None,
 		Left,
@@ -13,6 +20,7 @@ public class Building {
 	private static Cuboid.Face allButBottom = (Cuboid.Face.all & ~Cuboid.Face.bottom);
 
 	public static void Generate(Mesh building,
+								Mesh billboardAd,
 								float averageHeight,	/// Average height of the building
 								float maxWidth,			/// Max width of the building
 								float maxLength,		/// Max length of the building
@@ -41,7 +49,7 @@ public class Building {
 		float topY =   Extensions.RandomAverage(0.0f, asymmetry * 0.5f * (trunkLength - topLength));
 
 		//billboard = BillboardDesc.None;
-		CombineInstance[] combine = new CombineInstance[(billboard == BillboardDesc.None ? 2 : 3)];
+		CombineInstance[] combine = new CombineInstance[2];
 
 		// Top
 		combine[0].mesh = Cuboid.Create(new Vector3(topWidth, topHeight, topLength), allButBottom);
@@ -61,24 +69,26 @@ public class Building {
 			float z = (billboard == BillboardDesc.Front ? -1.0f : billboard == BillboardDesc.Back ? 1.0f : 0.8f);
 
 			// Billboard sign
-			combine[2].mesh = Cuboid.Create(new Vector3(billboardWidth, billboardHeight, billboardLength), Cuboid.Face.all);
-			combine[2].transform = Extensions.TranslationMatrix(0.5f * (trunkWidth + billboardWidth) * x, 0.5f * trunkHeight, 0.5f * z * (trunkLength + billboardLength));
+			CombineInstance[] combineBillboardAd = new CombineInstance[1];
+			combineBillboardAd[0].mesh = Cuboid.CreateWithTag(new Vector3(billboardWidth, billboardHeight, billboardLength), tag, Cuboid.Face.all);
+			combineBillboardAd[0].transform = Extensions.TranslationMatrix(0.5f * (trunkWidth + billboardWidth) * x, 0.5f * trunkHeight, 0.5f * z * (trunkLength + billboardLength));
+			billboardAd.CombineMeshes(combineBillboardAd);
 		}
 
 		building.CombineMeshes(combine);
 	}
 
-	public static Mesh Generate(float averageHeight,	/// Average height of the building
-								float maxWidth,			/// Max width of the building
-								float maxLength,		/// Max length of the building
-								float noise,			/// Noise: when 0, the building is exactly averageHeight x maxWidth x maxLength
-								Vector2 style,			/// Style of the building (magic fudge parameter)
-								Vector3 tag,			/// Information to identify in the shader
-								BillboardDesc billboard	/// Where to put the billboard if any
-								)
+	public static Meshes Generate(float averageHeight,		/// Average height of the building
+								  float maxWidth,			/// Max width of the building
+								  float maxLength,			/// Max length of the building
+								  float noise,				/// Noise: when 0, the building is exactly averageHeight x maxWidth x maxLength
+								  Vector2 style,			/// Style of the building (magic fudge parameter)
+								  Vector3 tag,				/// Information to identify in the shader
+								  BillboardDesc billboard	/// Where to put the billboard if any
+								  )
 	{
-		Mesh building = new Mesh();
-		Generate(building, averageHeight, maxWidth, maxLength, noise, style, tag, billboard);
-		return building;
+		Meshes meshes = new Meshes();
+		Generate(meshes.Building, meshes.BillboardAd, averageHeight, maxWidth, maxLength, noise, style, tag, billboard);
+		return meshes;
 	}
 }

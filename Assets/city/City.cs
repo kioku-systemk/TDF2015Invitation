@@ -41,54 +41,54 @@ public class City {
 		return new Size(width, length);
 	}
 
-	public static void GenerateBlock(Mesh block,
-	                                 int blockWidthInCells,
-	                                 int blockLengthInCells,
-	                                 float cellWidth,
-	                                 float cellLength,
-	                                 float buildingAverageHeight,
-	                                 float noise,
-	                                 float styleA,
-	                                 float styleB) {
-		CombineInstance[] combine = new CombineInstance[2 * blockWidthInCells * blockLengthInCells];
+// 	public static void GenerateBlock(Mesh block,
+// 	                                 int blockWidthInCells,
+// 	                                 int blockLengthInCells,
+// 	                                 float cellWidth,
+// 	                                 float cellLength,
+// 	                                 float buildingAverageHeight,
+// 	                                 float noise,
+// 	                                 float styleA,
+// 	                                 float styleB) {
+// 		CombineInstance[] combine = new CombineInstance[2 * blockWidthInCells * blockLengthInCells];
 
-		for (var j = 0; j < blockLengthInCells; ++j) {
-			for (var i = 0; i < blockWidthInCells; ++i) {
-				var seed = Hash.Get(Hash.Get(i) + j);
-				Random.seed = seed;
-				Vector3 tag = new Vector3((float)i / (float)blockWidthInCells,
-										  (float)j / (float)blockLengthInCells,
-										  (float)seed / 256.0f);
+// 		for (var j = 0; j < blockLengthInCells; ++j) {
+// 			for (var i = 0; i < blockWidthInCells; ++i) {
+// 				var seed = Hash.Get(Hash.Get(i) + j);
+// 				Random.seed = seed;
+// 				Vector3 tag = new Vector3((float)i / (float)blockWidthInCells,
+// 										  (float)j / (float)blockLengthInCells,
+// 										  (float)seed / 256.0f);
 
-				Building.BillboardDesc billboard = Building.BillboardDesc.None;
-				if (i == 0) { billboard = Building.BillboardDesc.Left; }
-				else if (j == 0) { billboard = Building.BillboardDesc.Front; }
-				else if (i == blockWidthInCells - 1) { billboard = Building.BillboardDesc.Right; }
-				else if (j == blockLengthInCells - 1) { billboard = Building.BillboardDesc.Back; }
+// 				Building.BillboardDesc billboard = Building.BillboardDesc.None;
+// 				if (i == 0) { billboard = Building.BillboardDesc.Left; }
+// 				else if (j == 0) { billboard = Building.BillboardDesc.Front; }
+// 				else if (i == blockWidthInCells - 1) { billboard = Building.BillboardDesc.Right; }
+// 				else if (j == blockLengthInCells - 1) { billboard = Building.BillboardDesc.Back; }
 
-				int index = 2 * (i + j * blockWidthInCells);
-				combine[index].mesh = Building.Generate(buildingAverageHeight, cellWidth, cellLength, noise, new Vector2(styleA, styleB), tag, billboard);
-				combine[index].transform = Extensions.TranslationMatrix(cellWidth * i, 0.0f, cellLength * j);
+// 				int index = 2 * (i + j * blockWidthInCells);
+// 				combine[index].mesh = Building.Generate(buildingAverageHeight, cellWidth, cellLength, noise, new Vector2(styleA, styleB), tag, billboard);
+// 				combine[index].transform = Extensions.TranslationMatrix(cellWidth * i, 0.0f, cellLength * j);
 
-				combine[index + 1].mesh = Cuboid.Create(new Vector3(cellWidth, 0.0f, cellLength), Cuboid.Face.top);
-				combine[index + 1].transform = Extensions.TranslationMatrix(cellWidth * i, 0.0f, cellLength * j);
-			}
-		}
-		block.CombineMeshes(combine);
-	}
+// 				combine[index + 1].mesh = Cuboid.Create(new Vector3(cellWidth, 0.0f, cellLength), Cuboid.Face.top);
+// 				combine[index + 1].transform = Extensions.TranslationMatrix(cellWidth * i, 0.0f, cellLength * j);
+// 			}
+// 		}
+// 		block.CombineMeshes(combine);
+// 	}
 
-	public static Mesh GenerateBlock(int blockWidthInCells,
-	                                 int blockLengthInCells,
-	                                 float cellWidth,
-	                                 float cellLength,
-	                                 float buildingAverageHeight,
-	                                 float noise,
-	                                 float styleA,
-	                                 float styleB) {
-		Mesh block = new Mesh();
-		GenerateBlock(block, blockWidthInCells, blockLengthInCells, cellWidth, cellLength, buildingAverageHeight, noise, styleA, styleB);
-		return block;
-	}
+// 	public static Mesh GenerateBlock(int blockWidthInCells,
+// 	                                 int blockLengthInCells,
+// 	                                 float cellWidth,
+// 	                                 float cellLength,
+// 	                                 float buildingAverageHeight,
+// 	                                 float noise,
+// 	                                 float styleA,
+// 	                                 float styleB) {
+// 		Mesh block = new Mesh();
+// 		GenerateBlock(block, blockWidthInCells, blockLengthInCells, cellWidth, cellLength, buildingAverageHeight, noise, styleA, styleB);
+// 		return block;
+// 	}
 
 	public static float GridToPosition(int i, int i0,
 									   int blockWidthInCells, float streetWidth,
@@ -102,7 +102,8 @@ public class City {
 		return cellWidth * i1 + streetOffset;
 	}
 
-	public static void GeneratePatch(Mesh patch,
+	public static void GeneratePatch(Mesh patchShader1,
+									 Mesh patchShader2,
 	                                 int i0,
 	                                 int j0,
 	                                 int patchWidthInCells,
@@ -120,7 +121,8 @@ public class City {
 	                                 float styleA,
 	                                 float styleB) {
 		Debug.Log("Generate patch [" + patchWidthInCells + " x " + patchLengthInCells +"]");
-		CombineInstance[] combine = new CombineInstance[2 * patchWidthInCells * patchLengthInCells];
+		CombineInstance[] combine1 = new CombineInstance[2 * patchWidthInCells * patchLengthInCells];
+		CombineInstance[] combine2 = new CombineInstance[patchWidthInCells * patchLengthInCells];
 
 		for (var j = 0; j < patchLengthInCells; ++j) {
 			for (var i = 0; i < patchWidthInCells; ++i) {
@@ -144,9 +146,13 @@ public class City {
 									   largeBlockLengthInCells, largeStreetWidth,
 									   cellLength);
 
-				int index = 2 * (i + j * patchWidthInCells);
-				combine[index].mesh = Building.Generate(buildingAverageHeight, cellWidth, cellLength, noise, new Vector2(styleA, styleB), tag, billboard);
-				combine[index].transform = Extensions.TranslationMatrix(x, 0.0f, y);
+				int index = i + j * patchWidthInCells;
+
+				var meshes = Building.Generate(buildingAverageHeight, cellWidth, cellLength, noise, new Vector2(styleA, styleB), tag, billboard);
+				combine1[index * 2].mesh = meshes.Building;
+				combine1[index * 2].transform = Extensions.TranslationMatrix(x, 0.0f, y);
+				combine2[index].mesh = meshes.BillboardAd;
+				combine2[index].transform = Extensions.TranslationMatrix(x, 0.0f, y);
 
 				var x1 = GridToPosition(i + 1, i0,
 										blockWidthInCells, streetWidth,
@@ -156,14 +162,16 @@ public class City {
 										blockLengthInCells, streetWidth,
 										largeBlockLengthInCells, largeStreetWidth,
 										cellLength);
-				combine[index + 1].mesh = Cuboid.Create(new Vector3(x1 - x, 0.0f, y1 - y), Cuboid.Face.top);
-				combine[index + 1].transform = Extensions.TranslationMatrix(0.5f * (x + x1), 0.0f, 0.5f * (y + y1));
+				combine1[index * 2 + 1].mesh = Cuboid.Create(new Vector3(x1 - x, 0.0f, y1 - y), Cuboid.Face.top);
+				combine1[index * 2 + 1].transform = Extensions.TranslationMatrix(0.5f * (x + x1), 0.0f, 0.5f * (y + y1));
 			}
 		}
-		patch.CombineMeshes(combine);
+		patchShader1.CombineMeshes(combine1);
+		patchShader2.CombineMeshes(combine2);
 	}
 
-	public static Size GenerateCity(List<Mesh> meshes,
+	public static Size GenerateCity(List<Mesh> meshesShader1,
+									List<Mesh> meshesShader2,
 									int cityWidthInCells,
 	                                int cityLengthInCells,
 	                                int idealPatchWidthInCells,
@@ -184,20 +192,22 @@ public class City {
 
 		for (var j = 0; j < cityLengthInCells; j += idealPatchLengthInCells) {
 			for (var i = 0; i < cityWidthInCells; i += idealPatchWidthInCells) {
-				var patch = new Mesh();
+				var patchShader1 = new Mesh();
+				var patchShader2 = new Mesh();
 				var patchWidth = Mathf.Min(idealPatchWidthInCells, cityWidthInCells - i);
 				var patchLength = Mathf.Min(idealPatchLengthInCells, cityLengthInCells - j);
 
-				GeneratePatch(patch, i - cityWidthInCells / 2, j - cityLengthInCells / 2, patchWidth, patchLength,
+				GeneratePatch(patchShader1, patchShader2, i - cityWidthInCells / 2, j - cityLengthInCells / 2, patchWidth, patchLength,
 				              blockWidthInCells, blockLengthInCells, streetWidth,
 				              largeBlockWidthInCells, largeBlockLengthInCells, largeStreetWidth,
 				              cellWidth, cellLength,
 				              buildingAverageHeight, noise, styleA, styleB);
-				meshes.Add(patch);
+				meshesShader1.Add(patchShader1);
+				meshesShader2.Add(patchShader2);
 			}
 		}
 
-		Debug.Log("Generated " + meshes.Count + (meshes.Count > 1 ? " patches" : "patch"));
+		Debug.Log("Generated " + meshesShader1.Count + (meshesShader1.Count > 1 ? " patches" : "patch"));
 
 
 		return GetCitySize(cityWidthInCells, cityLengthInCells,
