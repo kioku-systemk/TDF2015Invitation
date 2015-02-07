@@ -304,7 +304,7 @@
 		void surf (Input IN, inout SurfaceOutput o) {
 			//o.Emission = DebugUV(IN);
 			o.Emission = Windows(IN) + GlowEdges(IN);
-            o.Emission += _spectrum * 0.25;
+            //o.Emission += _spectrum * 0.25;
 			o.Albedo = _color;// * float4(awesomeShaderEffect(IN), 1.0);
 		}
 
