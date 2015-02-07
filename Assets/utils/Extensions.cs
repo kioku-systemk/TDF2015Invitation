@@ -29,7 +29,7 @@ public static class Extensions
 	{
 		var triangleOffset = self.triangles.Length;
 		var vertexIndexOffset = self.vertices.Length;
-		
+
 		self.vertices = ConcatArrays(self.vertices, other.vertices.Select(p => transform.MultiplyPoint(p)).ToArray());
 		self.normals = ConcatArrays(self.normals, other.normals.Select(n => transform.MultiplyVector(n)).ToArray());
 		self.tangents = ConcatArrays(self.tangents, other.tangents.Select(t => {
@@ -37,7 +37,7 @@ public static class Extensions
 			return new Vector4(t2.x, t2.y, t2.z, t.w); }).ToArray());
 		self.uv = ConcatArrays(self.uv, other.uv);
 		self.colors = ConcatArrays(self.colors, other.colors);
-		
+
 		var triangles = ConcatArrays(self.triangles, other.triangles);
 		for (var i = triangleOffset; i < triangles.Length; ++i)
 		{
@@ -61,6 +61,11 @@ public static class Extensions
 		return Matrix4x4.TRS(new Vector3(x, y, z), Quaternion.identity, Vector3.one);
 	}
 
+	public static Matrix4x4 TranslationMatrix(Vector3 v)
+	{
+		return Matrix4x4.TRS(v, Quaternion.identity, Vector3.one);
+	}
+
 	public static Matrix4x4 RotationMatrix(float angle, float x, float y, float z)
 	{
 		return Matrix4x4.TRS(Vector3.zero, Quaternion.AngleAxis(angle, new Vector3(x, y, z)), Vector3.one);
@@ -71,7 +76,7 @@ public static class Extensions
 		return Matrix4x4.TRS(Vector3.zero, Quaternion.identity, new Vector3(x, y, z));
 	}
 
-	public static void Translate(this Mesh mesh, float x, float y, float z) { mesh.Transform(TranslationMatrix(x, y, z)); }	
+	public static void Translate(this Mesh mesh, float x, float y, float z) { mesh.Transform(TranslationMatrix(x, y, z)); }
 	public static void Rotate(this Mesh mesh, float angle, float x, float y, float z) { mesh.Transform(RotationMatrix(angle, x, y, z)); }
 	public static void Scale(this Mesh mesh, float x, float y, float z) { mesh.Transform(ScaleMatrix(x, y, z)); }
 

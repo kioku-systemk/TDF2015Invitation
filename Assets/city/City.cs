@@ -26,8 +26,7 @@ public class City {
 	                               int largeBlockLengthInCells,
 	                               float largeStreetWidth,
 	                               float cellWidth,
-	                               float cellLength)
-	{
+	                               float cellLength) {
 		var yStreets = lengthInCells / blockLengthInCells;
 		var yLargeStreets = lengthInCells / largeBlockLengthInCells;
 		var yStreetOffset = yStreets * streetWidth + yLargeStreets * largeStreetWidth;
@@ -51,11 +50,10 @@ public class City {
 	                                 float noise,
 	                                 float styleA,
 	                                 float styleB) {
-		CombineInstance[] combine = new CombineInstance[blockWidthInCells * blockLengthInCells];
+		CombineInstance[] combine = new CombineInstance[2 * blockWidthInCells * blockLengthInCells];
 
 		for (var j = 0; j < blockLengthInCells; ++j) {
 			for (var i = 0; i < blockWidthInCells; ++i) {
-				int index = i + j * blockWidthInCells;
 				var seed = Hash.Get(Hash.Get(i) + j);
 				Random.seed = seed;
 				Vector3 tag = new Vector3((float)i / (float)blockWidthInCells,
@@ -68,8 +66,12 @@ public class City {
 				else if (i == blockWidthInCells - 1) { billboard = Building.BillboardDesc.Right; }
 				else if (j == blockLengthInCells - 1) { billboard = Building.BillboardDesc.Back; }
 
+				int index = 2 * (i + j * blockWidthInCells);
 				combine[index].mesh = Building.Generate(buildingAverageHeight, cellWidth, cellLength, noise, new Vector2(styleA, styleB), tag, billboard);
 				combine[index].transform = Extensions.TranslationMatrix(cellWidth * i, 0.0f, cellLength * j);
+
+				combine[index + 1].mesh = Cuboid.Create(new Vector3(cellWidth, 0.0f, cellLength), Cuboid.Face.top);
+				combine[index + 1].transform = Extensions.TranslationMatrix(cellWidth * i, 0.0f, cellLength * j);
 			}
 		}
 		block.CombineMeshes(combine);
@@ -86,6 +88,18 @@ public class City {
 		Mesh block = new Mesh();
 		GenerateBlock(block, blockWidthInCells, blockLengthInCells, cellWidth, cellLength, buildingAverageHeight, noise, styleA, styleB);
 		return block;
+	}
+
+	public static float GridToPosition(int i, int i0,
+									   int blockWidthInCells, float streetWidth,
+									   int largeBlockWidthInCells, float largeStreetWidth,
+									   float cellWidth) {
+		var i1 = i + i0;
+		var streets = i1 < 0 ? (i1 + 1) / blockWidthInCells - 1 : i1 / blockWidthInCells;
+		var largeStreets = i1 < 0 ? (i1 + 1) / largeBlockWidthInCells - 1 : i1 / largeBlockWidthInCells;
+		var streetOffset = streets * streetWidth + largeStreets * largeStreetWidth;
+
+		return cellWidth * i1 + streetOffset;
 	}
 
 	public static void GeneratePatch(Mesh patch,
@@ -106,37 +120,44 @@ public class City {
 	                                 float styleA,
 	                                 float styleB) {
 		Debug.Log("Generate patch [" + patchWidthInCells + " x " + patchLengthInCells +"]");
-		CombineInstance[] combine = new CombineInstance[patchWidthInCells * patchLengthInCells];
+		CombineInstance[] combine = new CombineInstance[2 * patchWidthInCells * patchLengthInCells];
 
 		for (var j = 0; j < patchLengthInCells; ++j) {
-			var j1 = j + j0;
-			var yStreets = j1 < 0 ? (j1 + 1) / blockLengthInCells - 1 : j1 / blockLengthInCells;
-			var yLargeStreets = j1 < 0 ? (j1 + 1) / largeBlockLengthInCells - 1 : j1 / largeBlockLengthInCells;
-			var yStreetOffset = yStreets * streetWidth + yLargeStreets * largeStreetWidth;
-
 			for (var i = 0; i < patchWidthInCells; ++i) {
-				var i1 = i + i0;
-				var xStreets = i1 < 0 ? (i1 + 1) / blockWidthInCells - 1 : i1 / blockWidthInCells;
-				var xLargeStreets = i1 < 0 ? (i1 + 1) / largeBlockWidthInCells - 1 : i1 / largeBlockWidthInCells;
-				var xStreetOffset = xStreets * streetWidth + xLargeStreets * largeStreetWidth;
-
-				var x = cellWidth * i1 + xStreetOffset;
-				var y = cellLength * j1 + yStreetOffset;
-
 				Building.BillboardDesc billboard = Building.BillboardDesc.None;
 				if (((i + i0) % largeBlockWidthInCells) == 0) { billboard = Building.BillboardDesc.Left; }
 				else if (((i + i0 + 1) % largeBlockWidthInCells) == 0) { billboard = Building.BillboardDesc.Right; }
 				else if (((j + j0) % largeBlockLengthInCells) == 0) { billboard = Building.BillboardDesc.Front; }
 				else if (((j + j0 + 1) % largeBlockLengthInCells) == 0) { billboard = Building.BillboardDesc.Back; }
 
-				int index = i + j * patchWidthInCells;
 				var seed = Hash.Get(Hash.Get(i) + j);
 				Random.seed = seed;
 				Vector3 tag = new Vector3((float)i / (float)patchWidthInCells,
 										  (float)j / (float)patchLengthInCells,
 										  (float)seed / 256.0f);
+				var x = GridToPosition(i, i0,
+									   blockWidthInCells, streetWidth,
+									   largeBlockWidthInCells, largeStreetWidth,
+									   cellWidth);
+				var y = GridToPosition(j, j0,
+									   blockLengthInCells, streetWidth,
+									   largeBlockLengthInCells, largeStreetWidth,
+									   cellLength);
+
+				int index = 2 * (i + j * patchWidthInCells);
 				combine[index].mesh = Building.Generate(buildingAverageHeight, cellWidth, cellLength, noise, new Vector2(styleA, styleB), tag, billboard);
-				combine[index].transform = Extensions.TranslationMatrix(x, 0.0f, y); // ParametricFunction.T(x, y, maxX, maxY);
+				combine[index].transform = Extensions.TranslationMatrix(x, 0.0f, y);
+
+				var x1 = GridToPosition(i + 1, i0,
+										blockWidthInCells, streetWidth,
+										largeBlockWidthInCells, largeStreetWidth,
+										cellWidth);
+				var y1 = GridToPosition(j + 1, j0,
+										blockLengthInCells, streetWidth,
+										largeBlockLengthInCells, largeStreetWidth,
+										cellLength);
+				combine[index + 1].mesh = Cuboid.Create(new Vector3(x1 - x, 0.0f, y1 - y), Cuboid.Face.top);
+				combine[index + 1].transform = Extensions.TranslationMatrix(0.5f * (x + x1), 0.0f, 0.5f * (y + y1));
 			}
 		}
 		patch.CombineMeshes(combine);
@@ -158,8 +179,7 @@ public class City {
 	                                float buildingAverageHeight,
 	                                float noise,
 	                                float styleA,
-	                                float styleB)
-	{
+	                                float styleB) {
 		Debug.Log("Generate city [" + cityWidthInCells + " x " + cityLengthInCells +"]");
 
 		for (var j = 0; j < cityLengthInCells; j += idealPatchLengthInCells) {
