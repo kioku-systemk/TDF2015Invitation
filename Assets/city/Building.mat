@@ -52,7 +52,7 @@ Material:
       data:
         first:
           name: _vertexDeformation
-        second: 0
+        second: 1
       data:
         first:
           name: _maxWidth
@@ -60,7 +60,7 @@ Material:
       data:
         first:
           name: _maxLength
-        second: 1175.5
+        second: 1409
       data:
         first:
           name: _waveHeight

@@ -38,15 +38,15 @@ Material:
       data:
         first:
           name: _vertexDeformation
-        second: 0
+        second: 1
       data:
         first:
           name: _maxWidth
-        second: 1
+        second: 518
       data:
         first:
           name: _maxLength
-        second: 1
+        second: 1409
       data:
         first:
           name: _effectWindowsLights

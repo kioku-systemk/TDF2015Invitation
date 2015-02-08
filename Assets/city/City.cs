@@ -41,55 +41,6 @@ public class City {
 		return new Size(width, length);
 	}
 
-// 	public static void GenerateBlock(Mesh block,
-// 	                                 int blockWidthInCells,
-// 	                                 int blockLengthInCells,
-// 	                                 float cellWidth,
-// 	                                 float cellLength,
-// 	                                 float buildingAverageHeight,
-// 	                                 float noise,
-// 	                                 float styleA,
-// 	                                 float styleB) {
-// 		CombineInstance[] combine = new CombineInstance[2 * blockWidthInCells * blockLengthInCells];
-
-// 		for (var j = 0; j < blockLengthInCells; ++j) {
-// 			for (var i = 0; i < blockWidthInCells; ++i) {
-// 				var seed = Hash.Get(Hash.Get(i) + j);
-// 				Random.seed = seed;
-// 				Vector3 tag = new Vector3((float)i / (float)blockWidthInCells,
-// 										  (float)j / (float)blockLengthInCells,
-// 										  (float)seed / 256.0f);
-
-// 				Building.BillboardDesc billboard = Building.BillboardDesc.None;
-// 				if (i == 0) { billboard = Building.BillboardDesc.Left; }
-// 				else if (j == 0) { billboard = Building.BillboardDesc.Front; }
-// 				else if (i == blockWidthInCells - 1) { billboard = Building.BillboardDesc.Right; }
-// 				else if (j == blockLengthInCells - 1) { billboard = Building.BillboardDesc.Back; }
-
-// 				int index = 2 * (i + j * blockWidthInCells);
-// 				combine[index].mesh = Building.Generate(buildingAverageHeight, cellWidth, cellLength, noise, new Vector2(styleA, styleB), tag, billboard);
-// 				combine[index].transform = Extensions.TranslationMatrix(cellWidth * i, 0.0f, cellLength * j);
-
-// 				combine[index + 1].mesh = Cuboid.Create(new Vector3(cellWidth, 0.0f, cellLength), Cuboid.Face.top);
-// 				combine[index + 1].transform = Extensions.TranslationMatrix(cellWidth * i, 0.0f, cellLength * j);
-// 			}
-// 		}
-// 		block.CombineMeshes(combine);
-// 	}
-
-// 	public static Mesh GenerateBlock(int blockWidthInCells,
-// 	                                 int blockLengthInCells,
-// 	                                 float cellWidth,
-// 	                                 float cellLength,
-// 	                                 float buildingAverageHeight,
-// 	                                 float noise,
-// 	                                 float styleA,
-// 	                                 float styleB) {
-// 		Mesh block = new Mesh();
-// 		GenerateBlock(block, blockWidthInCells, blockLengthInCells, cellWidth, cellLength, buildingAverageHeight, noise, styleA, styleB);
-// 		return block;
-// 	}
-
 	public static float GridToPosition(int i, int i0,
 									   int blockWidthInCells, float streetWidth,
 									   int largeBlockWidthInCells, float largeStreetWidth,
@@ -207,12 +158,14 @@ public class City {
 			}
 		}
 
+		Size size = GetCitySize(cityWidthInCells, cityLengthInCells,
+								blockWidthInCells, blockLengthInCells, streetWidth,
+								largeBlockWidthInCells, largeBlockLengthInCells, largeStreetWidth,
+								cellWidth, cellLength);
+
 		Debug.Log("Generated " + meshesShader1.Count + (meshesShader1.Count > 1 ? " patches" : "patch"));
+		Debug.Log("Size: " + size.width + " x " + size.length);
 
-
-		return GetCitySize(cityWidthInCells, cityLengthInCells,
-		                   blockWidthInCells, blockLengthInCells, streetWidth,
-		                   largeBlockWidthInCells, largeBlockLengthInCells, largeStreetWidth,
-		                   cellWidth, cellLength);
+		return size;
 	}
 }

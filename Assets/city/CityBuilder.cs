@@ -12,7 +12,7 @@ public class CityBuilder : MonoBehaviour {
 	[Range(1, 100)]
 	public int city_width = 10;
 
-	[Range(1, 100)]
+	[Range(1, 200)]
 	public int city_length = 10;
 
 	[Range(1, 50)]
@@ -124,9 +124,19 @@ public class CityBuilder : MonoBehaviour {
 			meshFilter.sharedMesh = buildingsMeshes[i];
 			meshFilter.sharedMesh.bounds = new Bounds(Vector3.zero, 2000.0f * Vector3.one);
 
-			var subMeshFilter = child.GetChild(0).GetComponent<MeshFilter>();
+			var m1 = child.GetComponent<Renderer>().sharedMaterial;
+			m1.SetFloat("_maxWidth",	width);
+			m1.SetFloat("_maxLength",	length);
+
+
+			var subChild = child.GetChild(0);
+			var subMeshFilter = subChild.GetComponent<MeshFilter>();
 			subMeshFilter.sharedMesh = billboadsMeshes[i];
 			subMeshFilter.sharedMesh.bounds = new Bounds(Vector3.zero, 2000.0f * Vector3.one);
+
+			var m2 = subChild.GetComponent<Renderer>().sharedMaterial;
+			m2.SetFloat("_maxWidth",	width);
+			m2.SetFloat("_maxLength",	length);
 		}
 	}
 
