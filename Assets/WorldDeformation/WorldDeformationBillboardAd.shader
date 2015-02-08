@@ -212,7 +212,7 @@
 			float3 color2 = lerp(_adColor3.xyz, _adColor4.xyz, smoothstep(0.49, 0.51, hashValue));
 			float3 color = lerp(color1, color2, smoothstep(0.49, 0.51, abs(2.0 * hashValue - 1.0)));
 
-			return color * _effectBillboardAd;
+			return color * _effectBillboardAd * lerp(0.5, 1.5, _spectrum[0]);
 		}
 
 		sampler2D _fstTex;
@@ -220,7 +220,6 @@
 		void surf (Input IN, inout SurfaceOutput o) {
 			//o.Emission = DebugUV(IN);
 			o.Emission = GlowAd(IN);
-            //o.Emission += _spectrum * 0.25;
 			o.Albedo = _color * lerp(1.0, 0.4, _effectBillboardAd);// * float4(awesomeShaderEffect(IN), 1.0);
 		}
 
