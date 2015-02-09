@@ -1,17 +1,18 @@
 ﻿Shader "Custom/WorldDeformation" {
 	Properties {
+		_vertexTranslation ("vertex translation", Float) = 0.0
+		_vertexDeformation ("vertex deformation", Range(0, 1.0)) = 0.0
+		_maxWidth  ("Max width",  Float) = 1.0
+		_maxLength ("Max length", Float) = 1.0
+
+		_fstTex ("1st texture", 2D) = "white" {}
+		_sndTex ("2nd texture", 2D) = "white" {}
+
 		_color ("Main Color", Color) = (1,1,1,1)
 		_adColor1 ("Ad color 1", Color) = (1,1,1,1)
 		_adColor2 ("Ad color 2", Color) = (1,1,1,1)
 		_adColor3 ("Ad color 3", Color) = (1,1,1,1)
 		_adColor4 ("Ad color 4", Color) = (1,1,1,1)
-
-		_fstTex ("1st texture", 2D) = "white" {}
-		_sndTex ("2nd texture", 2D) = "white" {}
-		_vertexDeformation ("vertex deformation", Range(0, 1.0)) = 0.0
-
-		_maxWidth ("Max width", Float) = 1.0
-		_maxLength ("Max length", Float) = 1.0
 
 		// _effectWindowsLights ("Windows lights", Range(0.0, 1.0)) = 0.0
 		// _effectEdgeGlow ("Effect edge glow", Range(0.0, 1.0)) = 0.0
@@ -94,6 +95,7 @@
 		uniform float4 _adColor3;
 		uniform float4 _adColor4;
 
+		uniform float _vertexTranslation;
 		uniform float _vertexDeformation;
 		uniform float _maxWidth;
 		uniform float _maxLength;
@@ -176,14 +178,12 @@
 
 		void vert (inout appdata_full v) {
 			float4 p = v.vertex;
+			p.z += fmod(0.25 * _maxLength + _vertexTranslation, _maxLength);
 
-// 			if (abs(p.x) > 10.0 && abs(p.z) > 10.0)
-// 			{
 			float4x4 transform = T(p.xz);
 			v.vertex = mul(p - float4(p.x, 0.0, p.z, 0.0), transform);
 			v.normal = mul(float4(v.normal, 0.0), transform).xyz;
 			v.tangent = mul(v.tangent, transform);
-// 			}
 		}
 
 		// ---8<--------------------------------------------------------------

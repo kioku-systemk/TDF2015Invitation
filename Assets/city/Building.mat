@@ -52,7 +52,7 @@ Material:
       data:
         first:
           name: _vertexDeformation
-        second: 1
+        second: 0
       data:
         first:
           name: _maxWidth
@@ -120,6 +120,10 @@ Material:
       data:
         first:
           name: _time
+        second: 0
+      data:
+        first:
+          name: _vertexTranslation
         second: 0
     m_Colors:
       data:

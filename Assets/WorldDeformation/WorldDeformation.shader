@@ -1,15 +1,16 @@
 ﻿Shader "Custom/WorldDeformation" {
 	Properties {
-		_color ("Main Color", Color) = (1,1,1,1)
-		_neonBlueColor ("Neon blue color", Color) = (1,1,1,1)
-		_neonYellowColor ("Neon yellow color", Color) = (1,1,1,1)
+		_vertexTranslation ("vertex translation", Float) = 0.0
+		_vertexDeformation ("vertex deformation", Range(0, 1.0)) = 0.0
+		_maxWidth  ("Max width",  Float) = 1.0
+		_maxLength ("Max length", Float) = 1.0
 
 		_fstTex ("1st texture", 2D) = "white" {}
 		_sndTex ("2nd texture", 2D) = "white" {}
-		_vertexDeformation ("vertex deformation", Range(0, 1.0)) = 0.0
 
-		_maxWidth ("Max width", Float) = 1.0
-		_maxLength ("Max length", Float) = 1.0
+		_color ("Main Color", Color) = (1,1,1,1)
+		_neonBlueColor ("Neon blue color", Color) = (1,1,1,1)
+		_neonYellowColor ("Neon yellow color", Color) = (1,1,1,1)
 
 		_effectWindowsLights ("Windows lights", Range(0.0, 1.0)) = 0.0
 		_effectEdgeGlow ("Edge glow", Range(0.0, 1.0)) = 0.0
@@ -90,6 +91,7 @@
 		uniform float4 _neonBlueColor;
 		uniform float4 _neonYellowColor;
 
+		uniform float _vertexTranslation;
 		uniform float _vertexDeformation;
 		uniform float _maxWidth;
 		uniform float _maxLength;
@@ -172,14 +174,12 @@
 
 		void vert (inout appdata_full v) {
 			float4 p = v.vertex;
+			p.z += fmod(0.25 * _maxLength + _vertexTranslation, _maxLength);
 
-// 			if (abs(p.x) > 10.0 && abs(p.z) > 10.0)
-// 			{
 			float4x4 transform = T(p.xz);
 			v.vertex = mul(p - float4(p.x, 0.0, p.z, 0.0), transform);
 			v.normal = mul(float4(v.normal, 0.0), transform).xyz;
 			v.tangent = mul(v.tangent, transform);
-// 			}
 		}
 
 		// ---8<--------------------------------------------------------------
@@ -213,6 +213,7 @@
 			float windows = (smoothstep(0.25, 0.2, abs(frac(IN.uv_fstTex.x) - 0.5)) *
 							 smoothstep(0.25, 0.2, abs(frac(IN.uv_fstTex.y) - 0.5)));
 
+			//return float3(frac(IN.uv_fstTex).xy, 0.0);
 			return lightColor * windows * intensity * smoothstep(trigger, trigger + 0.01, _effectWindowsLights);
 		}
 
