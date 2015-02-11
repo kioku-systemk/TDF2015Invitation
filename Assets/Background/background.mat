@@ -29,7 +29,7 @@ Material:
       data:
         first:
           name: _topColor
-        second: {r: .113725491, g: .419607848, b: .996078432, a: 1}
+        second: {r: .117647059, g: .411764711, b: .996078432, a: 1}
       data:
         first:
           name: _fogColor
