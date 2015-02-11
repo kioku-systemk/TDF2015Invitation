@@ -33,8 +33,9 @@
 
 			float3 color = lerp(_fogColor, _topColor, pow(altitude, 0.8));
 
-			o.Albedo = color * 0.5;
+			o.Albedo = float3(0.0, 0.0, 0.0); // Don't use the light function
 			o.Alpha = 1.0;
+			o.Emission = color;
 		}
 		ENDCG
 
