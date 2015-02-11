@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: background
-  m_Shader: {fileID: 4800000, guid: e87d1dad90c5b4c58a0d468cc135dfa1, type: 3}
+  m_Shader: {fileID: 4800000, guid: e49788354cb3ad44a9ef942e8d7c540e, type: 3}
   m_ShaderKeywords: []
   m_CustomRenderQueue: -1
   m_SavedProperties:
@@ -26,3 +26,11 @@ Material:
         first:
           name: _Color
         second: {r: 1, g: 1, b: 1, a: 1}
+      data:
+        first:
+          name: _topColor
+        second: {r: .113725491, g: .419607848, b: .996078432, a: 1}
+      data:
+        first:
+          name: _fogColor
+        second: {r: .517647088, g: .768627465, b: .996078432, a: 1}
