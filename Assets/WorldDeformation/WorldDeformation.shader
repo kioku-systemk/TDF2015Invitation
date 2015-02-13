@@ -200,7 +200,6 @@
 
 		float3 Windows(Input IN)
 		{
-			// Not sure why I need this trick. Without the floor + x256, I get ugly artifacts.
 			float2 seed = floor(256.0 * IN.color.xy);
 
 			float2 windowId = floor(float2(0.5, 1.0) * IN.uv_fstTex) + seed;

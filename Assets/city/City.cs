@@ -85,8 +85,8 @@ public class City {
 
 				var seed = Hash.Get(Hash.Get(i) + j);
 				Random.seed = seed;
-				Vector3 tag = new Vector3((float)i / (float)patchWidthInCells,
-										  (float)j / (float)patchLengthInCells,
+				Vector3 tag = new Vector3(Mathf.Abs((float)(i + i0)) / 256.0f,
+										  Mathf.Abs((float)(j + j0)) / 256.0f,
 										  (float)seed / 256.0f);
 				var x = GridToPosition(i, i0,
 									   blockWidthInCells, streetWidth,

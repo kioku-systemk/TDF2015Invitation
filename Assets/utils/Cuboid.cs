@@ -103,7 +103,7 @@ public class Cuboid {
 		cuboid.uv2		= vertices.Select(x => new Vector2(1.0f, 1.0f) - x.uv).ToArray();
 
 		Color color = new Color(tag.x, tag.y, tag.z);
-		cuboid.colors	= vertices.Select((x, i) => (i/4 == 3 || i/4 == 5) ? Color.white : color).ToArray();
+		cuboid.colors	= vertices.Select(x => color).ToArray();
 		cuboid.triangles = triangles.Where((v, i) => IsFaceIncluded(i, face)).ToArray();
 		return cuboid;
 	}

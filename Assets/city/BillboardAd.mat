@@ -71,6 +71,22 @@ Material:
         first:
           name: _effectBillboardAd
         second: 0
+      data:
+        first:
+          name: _patchWidth
+        second: 1
+      data:
+        first:
+          name: _patchLength
+        second: 1
+      data:
+        first:
+          name: _effectBillboardAd1
+        second: 0
+      data:
+        first:
+          name: _effectBillboardAd2
+        second: 0
     m_Colors:
       data:
         first:

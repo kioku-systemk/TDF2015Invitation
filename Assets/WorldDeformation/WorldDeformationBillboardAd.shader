@@ -16,7 +16,8 @@
 
 		// _effectWindowsLights ("Windows lights", Range(0.0, 1.0)) = 0.0
 		// _effectEdgeGlow ("Effect edge glow", Range(0.0, 1.0)) = 0.0
-		_effectBillboardAd ("Billboard Ad", Range(0.0, 1.0)) = 0.0
+		_effectBillboardAd1 ("Billboard Ad 1", Range(0.0, 1.0)) = 0.0
+		_effectBillboardAd2 ("Billboard Ad 2", Range(0.0, 1.0)) = 0.0
 	}
 	SubShader {
 		Tags { "RenderType" = "Opaque" }
@@ -102,7 +103,8 @@
 
 		// uniform float _effectWindowsLights;
 		// uniform float _effectEdgeGlow;
-		uniform float _effectBillboardAd;
+		uniform float _effectBillboardAd1;
+		uniform float _effectBillboardAd2;
 
         float4 _spectrum;
 
@@ -194,33 +196,33 @@
 			return frac(sin(dot(uv, float2(12.9898,78.233))) * 43758.5453);
 		}
 
-		float3 DebugUV(Input IN)
+		float3 GetAdColor(Input IN)
 		{
-			float x = (frac(IN.uv_fstTex.x) *
-					   frac(IN.uv_fstTex.y));
+			float2 adId = floor(256.0 * IN.color.xy);
+			float hashValue1 = hash(adId);
+			float hashValue2 = IN.color.z;
 
-			return x * float3(1.0, 0.0, 0.5);
+			float w1 = smoothstep(0.4, 0.6, hashValue1);
+			float w2 = smoothstep(0.4, 0.6, hashValue2);
+			float3 color1 = lerp(_adColor1.xyz, _adColor2.xyz, w1);
+			float3 color2 = lerp(_adColor3.xyz, _adColor4.xyz, w1);
+			return lerp(color1, color2, w2);
 		}
 
-		float3 GlowAd(Input IN)
+		float3 GlowAd(Input IN, float3 color)
 		{
-			// Not sure why I need this trick. Why the ugly artifacts?
-			float2 adId = floor(4.0 * IN.color.xy);
-			float hashValue = hash(adId);
-
-			float3 color1 = lerp(_adColor1.xyz, _adColor2.xyz, smoothstep(0.49, 0.51, hashValue));
-			float3 color2 = lerp(_adColor3.xyz, _adColor4.xyz, smoothstep(0.49, 0.51, hashValue));
-			float3 color = lerp(color1, color2, smoothstep(0.49, 0.51, abs(2.0 * hashValue - 1.0)));
-
-			return color * _effectBillboardAd * lerp(0.5, 1.5, _spectrum[0]);
+			float level = _spectrum[0];
+			float intensity1 = _effectBillboardAd1 * lerp(0.5, 1.0, level);
+			float intensity2 = _effectBillboardAd2 * smoothstep(level, 0.95 * level, IN.uv_fstTex.y);
+			return color * (intensity1 + intensity2);
 		}
 
 		sampler2D _fstTex;
 		sampler2D _sndTex;
 		void surf (Input IN, inout SurfaceOutput o) {
-			//o.Emission = DebugUV(IN);
-			o.Emission = GlowAd(IN);
-			o.Albedo = _color * lerp(1.0, 0.4, _effectBillboardAd);// * float4(awesomeShaderEffect(IN), 1.0);
+			float3 color = GetAdColor(IN);
+			o.Emission = GlowAd(IN, color);
+			o.Albedo = color;
 		}
 
 		// ---8<--------------------------------------------------------------
