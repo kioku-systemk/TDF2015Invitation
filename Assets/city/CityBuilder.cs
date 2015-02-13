@@ -1,7 +1,10 @@
-using UnityEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif // UNITY_EDITOR
 
 [ExecuteInEditMode]
 [RequireComponent(typeof(MeshFilter))]
@@ -75,13 +78,24 @@ public class CityBuilder : MonoBehaviour {
 		return hash;
 	}
 
+#if UNITY_EDITOR
+    [MenuItem("City/Build Mesh")]
+    public static void BuildMesh()
+    {
+        var obj = GameObject.Find("City Test");
+        if (obj != null)
+        {
+            var builder = obj.GetComponent<CityBuilder>();
+            if (builder != null)
+            {
+                builder.Create();
+            }
+        }
+    }
 
-	private void Create() {
-		var newHash = GetHashCode();
-		if (hash == newHash) {
-			return;
- 		}
-		hash = newHash;
+	private void Create()
+    {
+        hash = GetHashCode();
 
 		List<Mesh> buildingsMeshes = new List<Mesh>();
 		List<Mesh> billboardsMeshes = new List<Mesh>();
@@ -121,8 +135,14 @@ public class CityBuilder : MonoBehaviour {
 
 			// Hack to avoid culling of shaded vertices;
 			// FIXME: deduce bounding box from deformation.
-			meshFilter.sharedMesh = buildingsMeshes[i];
-			meshFilter.sharedMesh.bounds = new Bounds(Vector3.zero, 2000.0f * Vector3.one);
+            buildingsMeshes[i].bounds = new Bounds(Vector3.zero, 2000.0f * Vector3.one);
+            billboadsMeshes[i].bounds = new Bounds(Vector3.zero, 2000.0f * Vector3.one);
+
+            string path_building = "Assets/Meshes/City/Building[" + i + "].asset";
+            string path_billboard = "Assets/Meshes/City/Billboard[" + i + "].asset";
+            AssetDatabase.CreateAsset(buildingsMeshes[i], path_building);
+            AssetDatabase.CreateAsset(billboadsMeshes[i], path_billboard);
+            meshFilter.sharedMesh = AssetDatabase.LoadAssetAtPath(path_building, typeof(Mesh)) as Mesh;
 
 			var m1 = child.GetComponent<Renderer>().sharedMaterial;
 			m1.SetFloat("_maxWidth",	width);
@@ -131,28 +151,28 @@ public class CityBuilder : MonoBehaviour {
 
 			var subChild = child.GetChild(0);
 			var subMeshFilter = subChild.GetComponent<MeshFilter>();
-			subMeshFilter.sharedMesh = billboadsMeshes[i];
-			subMeshFilter.sharedMesh.bounds = new Bounds(Vector3.zero, 2000.0f * Vector3.one);
+            subMeshFilter.sharedMesh = AssetDatabase.LoadAssetAtPath(path_billboard, typeof(Mesh)) as Mesh;
 
 			var m2 = subChild.GetComponent<Renderer>().sharedMaterial;
 			m2.SetFloat("_maxWidth",	width);
 			m2.SetFloat("_maxLength",	length);
 		}
 	}
+#endif // UNITY_EDITOR
 
-	private void Awake () {
-		Create ();
-	}
+    private void Awake()
+    {
+    }
 
-	private void OnEnable() {
-		Create ();
-	}
+    private void OnEnable()
+    {
+    }
 
-	private void Update () {
-		Create ();
-// 		var material = GetComponent<Renderer>().sharedMaterial;
-// 		material.SetFloat("_time", Time.time);
-// 		material.SetFloat("_maxWidth", width);
-// 		material.SetFloat("_maxLength", length);
-	}
+    private void Update()
+    {
+        // 		var material = GetComponent<Renderer>().sharedMaterial;
+        // 		material.SetFloat("_time", Time.time);
+        // 		material.SetFloat("_maxWidth", width);
+        // 		material.SetFloat("_maxLength", length);
+    }
 }

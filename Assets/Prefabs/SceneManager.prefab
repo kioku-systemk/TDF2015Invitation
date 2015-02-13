@@ -1,48 +1,44 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &191104
+--- !u!1 &149678
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
   m_Component:
-  - 4: {fileID: 491104}
-  - 114: {fileID: 11491104}
+  - 4: {fileID: 449678}
+  - 114: {fileID: 11449678}
   m_Layer: 0
-  m_Name: Seeker
+  m_Name: SceneManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &491104
+--- !u!4 &449678
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 191104}
+  m_GameObject: {fileID: 149678}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -.382149696, y: .793684483, z: -.173421383}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!114 &11491104
+--- !u!114 &11449678
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 191104}
+  m_GameObject: {fileID: 149678}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7b4ca103e25ce34f9a0421b0f0b5c18, type: 3}
+  m_Script: {fileID: 11500000, guid: ff8118ede0657b240bd7f8401d40b1db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_roots_of_animated_objects:
-  - {fileID: 0}
-  m_music_player: {fileID: 0}
-  m_time: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -52,6 +48,6 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 191104}
+  m_RootGameObject: {fileID: 149678}
   m_IsPrefabParent: 1
   m_IsExploded: 1
