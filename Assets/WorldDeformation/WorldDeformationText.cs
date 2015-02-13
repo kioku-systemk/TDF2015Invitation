@@ -17,12 +17,12 @@ public class WorldDeformationText : MonoBehaviour {
 	}
 
 	private void Update () {
-		transform.localPosition.Set(position.x,
+		transform.localPosition = new Vector3(position.x,
 									position.y + parameters.vertex_translation,
 									position.z);
 
-		Debug.Log("Translation: " + parameters.vertex_translation.ToString() + "\n" +
-				  //"Deformation: " + parameters.vertex_deformation.ToString() + "\n" +
-				  "Position: " + transform.localPosition.ToString());
+		//Debug.Log("Translation: " + parameters.vertex_translation.ToString() + "\n" +
+		//          //"Deformation: " + parameters.vertex_deformation.ToString() + "\n" +
+		//          "Position: " + transform.localPosition.ToString());
 	}
 }
