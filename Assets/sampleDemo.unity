@@ -2219,6 +2219,14 @@ Prefab:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 11413430, guid: 6ca53a7568ee4134884d87a723b25c98, type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11413432, guid: 6ca53a7568ee4134884d87a723b25c98, type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6ca53a7568ee4134884d87a723b25c98, type: 2}
   m_RootGameObject: {fileID: 1215878993}
@@ -3560,7 +3568,7 @@ AudioListener:
     type: 2}
   m_PrefabInternal: {fileID: 167210738}
   m_GameObject: {fileID: 1171505396}
-  m_Enabled: 0
+  m_Enabled: 1
 --- !u!92 &1171505398
 Behaviour:
   m_ObjectHideFlags: 0
@@ -3915,7 +3923,7 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 602855081}
   m_GameObject: {fileID: 1215878993}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a773099f140e846f7835d27351846623, type: 3}
   m_Name: 
@@ -3955,7 +3963,7 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 602855081}
   m_GameObject: {fileID: 1215878993}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9aaa3f5f2d574f228e4a21aa38b61e4, type: 3}
   m_Name: 
