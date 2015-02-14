@@ -89,6 +89,7 @@ public class CityBuilder : MonoBehaviour {
 			var builder = obj.GetComponent<CityBuilder>();
 			if (builder != null)
 			{
+				builder.hash = 0;
 				builder.Create();
 			}
 		}
