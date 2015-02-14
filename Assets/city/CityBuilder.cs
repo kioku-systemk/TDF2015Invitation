@@ -57,6 +57,7 @@ public class CityBuilder : MonoBehaviour {
 	private float width = 1.0f;
 	private float length = 1.0f;
 
+	[SerializeField]
 	private int hash = 0;
 
 	public override int GetHashCode() {
@@ -79,23 +80,27 @@ public class CityBuilder : MonoBehaviour {
 	}
 
 #if UNITY_EDITOR
-    [MenuItem("City/Build Mesh")]
-    public static void BuildMesh()
-    {
-        var obj = GameObject.Find("City Test");
-        if (obj != null)
-        {
-            var builder = obj.GetComponent<CityBuilder>();
-            if (builder != null)
-            {
-                builder.Create();
-            }
-        }
-    }
+	[MenuItem("City/Build Mesh")]
+	public static void BuildMesh()
+	{
+		var obj = GameObject.Find("City Test");
+		if (obj != null)
+		{
+			var builder = obj.GetComponent<CityBuilder>();
+			if (builder != null)
+			{
+				builder.Create();
+			}
+		}
+	}
 
 	private void Create()
-    {
-        hash = GetHashCode();
+	{
+		var newHash = GetHashCode();
+		if (hash == newHash) {
+			return;
+ 		}
+		hash = newHash;
 
 		List<Mesh> buildingsMeshes = new List<Mesh>();
 		List<Mesh> billboardsMeshes = new List<Mesh>();
@@ -132,61 +137,57 @@ public class CityBuilder : MonoBehaviour {
 
 		// At this point, we have the right number of children
 		for (var i = 0; i < numberOfMeshes; ++i) {
-			var child = transform.GetChild(i);
-			var meshFilter = child.GetComponent<MeshFilter>();
 
 			// Hack to avoid culling of shaded vertices;
 			// FIXME: deduce bounding box from deformation.
-            buildingsMeshes[i].bounds = new Bounds(Vector3.zero, 2000.0f * Vector3.one);
-            billboadsMeshes[i].bounds = new Bounds(Vector3.zero, 2000.0f * Vector3.one);
-            lightStreakMeshes[i].bounds = new Bounds(Vector3.zero, 2000.0f * Vector3.one);
+			buildingsMeshes[i].bounds = new Bounds(Vector3.zero, 2000.0f * Vector3.one);
+			billboadsMeshes[i].bounds = new Bounds(Vector3.zero, 2000.0f * Vector3.one);
+			lightStreakMeshes[i].bounds = new Bounds(Vector3.zero, 2000.0f * Vector3.one);
 
-            string path_building = "Assets/Meshes/City/Building[" + i + "].asset";
-            string path_billboard = "Assets/Meshes/City/Billboard[" + i + "].asset";
-            string path_lightstreak = "Assets/Meshes/City/LightStreak[" + i + "].asset";
-            AssetDatabase.CreateAsset(buildingsMeshes[i], path_building);
-            AssetDatabase.CreateAsset(billboadsMeshes[i], path_billboard);
-            AssetDatabase.CreateAsset(lightStreakMeshes[i], path_lightstreak);
-            meshFilter.sharedMesh = AssetDatabase.LoadAssetAtPath(path_building, typeof(Mesh)) as Mesh;
+			var rootPath = "Assets/Meshes/City";
+			string path_building	= rootPath + "/Building[" + i + "].asset";
+			string path_billboard	= rootPath + "/Billboard[" + i + "].asset";
+			string path_lightstreak	= rootPath + "/LightStreak[" + i + "].asset";
+			AssetDatabase.CreateAsset(buildingsMeshes[i], path_building);
+			AssetDatabase.CreateAsset(billboadsMeshes[i], path_billboard);
+			AssetDatabase.CreateAsset(lightStreakMeshes[i], path_lightstreak);
 
-			var m1 = child.GetComponent<Renderer>().sharedMaterial;
-			m1.SetFloat("_maxWidth",	width);
-			m1.SetFloat("_maxLength",	length);
-
-			//------------
-			var subChild = child.GetChild(0);
-			var subMeshFilter = subChild.GetComponent<MeshFilter>();
-            subMeshFilter.sharedMesh = AssetDatabase.LoadAssetAtPath(path_billboard, typeof(Mesh)) as Mesh;
-
-			var m2 = subChild.GetComponent<Renderer>().sharedMaterial;
-			m2.SetFloat("_maxWidth",	width);
-			m2.SetFloat("_maxLength",	length);
-
-			//------------
-			/*subChild = child.GetChild(1);
-			subMeshFilter = subChild.GetComponent<MeshFilter>();
-            subMeshFilter.sharedMesh = AssetDatabase.LoadAssetAtPath(path_lightstreak, typeof(Mesh)) as Mesh;
-
-			var m3 = subChild.GetComponent<Renderer>().sharedMaterial;
-			m3.SetFloat("_maxWidth",	width);
-			m3.SetFloat("_maxLength",	length);*/
+			var child = transform.GetChild(i);
+ 			SetMeshAndMaterialParameters(child, path_building);
+			SetMeshAndMaterialParameters(child.GetChild(0), path_billboard);
+			SetMeshAndMaterialParameters(child.GetChild(1), path_lightstreak);
 		}
 	}
+
+	private void SetMeshAndMaterialParameters(Transform transform, string assetPath)
+	{
+		var meshFilter = transform.GetComponent<MeshFilter>();
+		meshFilter.sharedMesh = AssetDatabase.LoadAssetAtPath(assetPath, typeof(Mesh)) as Mesh;
+
+		var m = transform.GetComponent<Renderer>().sharedMaterial;
+		m.SetFloat("_maxWidth", width);
+		m.SetFloat("_maxLength", length);
+	}
+
 #endif // UNITY_EDITOR
 
-    private void Awake()
-    {
-    }
+	private void Awake()
+	{
+	}
 
-    private void OnEnable()
-    {
-    }
+	private void OnEnable()
+	{
+	}
 
-    private void Update()
-    {
-        // 		var material = GetComponent<Renderer>().sharedMaterial;
-        // 		material.SetFloat("_time", Time.time);
-        // 		material.SetFloat("_maxWidth", width);
-        // 		material.SetFloat("_maxLength", length);
-    }
+	private void Update()
+	{
+#if UNITY_EDITOR
+		Create();
+#endif // UNITY_EDITOR
+
+		// 		var material = GetComponent<Renderer>().sharedMaterial;
+		// 		material.SetFloat("_time", Time.time);
+		// 		material.SetFloat("_maxWidth", width);
+		// 		material.SetFloat("_maxLength", length);
+	}
 }
