@@ -12,12 +12,12 @@ SceneSettings:
     backfaceThreshold: 100
 --- !u!104 &2
 RenderSettings:
-  m_Fog: 0
-  m_FogColor: {r: .5, g: .5, b: .5, a: 1}
-  m_FogMode: 3
+  m_Fog: 1
+  m_FogColor: {r: .517647088, g: .768627465, b: .996078432, a: 1}
+  m_FogMode: 1
   m_FogDensity: .00999999978
   m_LinearFogStart: 0
-  m_LinearFogEnd: 300
+  m_LinearFogEnd: 1000
   m_AmbientLight: {r: 0, g: 0, b: 0, a: 1}
   m_SkyboxMaterial: {fileID: 0}
   m_HaloStrength: .5
@@ -1637,7 +1637,7 @@ Transform:
   m_LocalScale: {x: 1900, y: 1900, z: 1900}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 5
 --- !u!1 &343793002
 GameObject:
   m_ObjectHideFlags: 0
@@ -2402,6 +2402,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 707026500}
   - 95: {fileID: 707026501}
+  - 114: {fileID: 707026502}
   m_Layer: 0
   m_Name: Light rig
   m_TagString: Untagged
@@ -2423,7 +2424,7 @@ Transform:
   - {fileID: 1165586211}
   - {fileID: 1777247231}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
 --- !u!95 &707026501
 Animator:
   serializedVersion: 3
@@ -2440,6 +2441,21 @@ Animator:
   m_ApplyRootMotion: 1
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &707026502
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 707026499}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d027b9ffe937f9c4ebb422cd5ff84b51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ambientLight: {r: 0, g: 0, b: 0, a: 1}
+  skyColor: {r: .117647059, g: .411764711, b: .996078432, a: 1}
+  fogColor: {r: .517647088, g: .768627465, b: .996078432, a: 1}
+  sky: {fileID: 332999964}
 --- !u!1001 &714839781
 Prefab:
   m_ObjectHideFlags: 0
@@ -2980,7 +2996,7 @@ Transform:
   - {fileID: 252656974}
   - {fileID: 1383923075}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
 --- !u!114 &981524461
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3443,7 +3459,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
 --- !u!1001 &1171012423
 Prefab:
   m_ObjectHideFlags: 0
@@ -3481,7 +3497,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: f24d8e701e0caf6478bdcf952d726476, type: 2}
       propertyPath: m_RootOrder
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8200006, guid: f24d8e701e0caf6478bdcf952d726476, type: 2}
       propertyPath: m_Volume
@@ -3816,7 +3832,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 491104, guid: 914d2b7f12a6ff54fa48f60200229d89, type: 2}
       propertyPath: m_RootOrder
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 11491104, guid: 914d2b7f12a6ff54fa48f60200229d89, type: 2}
       propertyPath: m_roots_of_animated_objects.Array.data[0]
@@ -5192,7 +5208,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 466080, guid: 6949dee307f61fb47848bcd0ce789daa, type: 2}
       propertyPath: m_RootOrder
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6949dee307f61fb47848bcd0ce789daa, type: 2}
@@ -5330,7 +5346,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
 --- !u!1 &1895491552
 GameObject:
   m_ObjectHideFlags: 0
@@ -5633,7 +5649,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 494692, guid: 3b8ef7841e31641a38b7de705b642914, type: 2}
       propertyPath: m_RootOrder
-      value: 9
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 494692, guid: 3b8ef7841e31641a38b7de705b642914, type: 2}
       propertyPath: m_LocalScale.x
@@ -5689,7 +5705,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 441032, guid: de105d8756e905346be4238553fa5a09, type: 2}
       propertyPath: m_RootOrder
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: de105d8756e905346be4238553fa5a09, type: 2}
