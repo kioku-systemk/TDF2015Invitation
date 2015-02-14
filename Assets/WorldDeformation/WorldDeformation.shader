@@ -21,9 +21,9 @@
 
 		CGPROGRAM
 
-        #ifdef SHADER_API_OPENGL
-            #pragma glsl
-        #endif
+		#ifdef SHADER_API_OPENGL
+			#pragma glsl
+		#endif
 
 		// From documentation:
 		// http://docs.unity3d.com/Manual/SL-SurfaceShaders.html
@@ -162,8 +162,8 @@
 		float4x4 T(float2 p2d) {
 			float3 p = P(p2d);
 
-			float3 ux = normalize(P(p2d + float2(0.01, 0.0)) - p);
-			float3 uz = normalize(P(p2d + float2(0.0, 0.01)) - p);
+			float3 ux = normalize(P(p2d + float2(1.0, 0.0)) - p);
+			float3 uz = normalize(P(p2d + float2(0.0, 1.0)) - p);
 			float3 uy = cross(uz, ux);
 
 			return float4x4(float4(ux, 0.0),
