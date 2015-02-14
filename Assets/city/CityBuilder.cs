@@ -99,7 +99,8 @@ public class CityBuilder : MonoBehaviour {
 
 		List<Mesh> buildingsMeshes = new List<Mesh>();
 		List<Mesh> billboardsMeshes = new List<Mesh>();
-		City.Size size = City.GenerateCity(buildingsMeshes, billboardsMeshes,
+		List<Mesh> lightStreakMeshes = new List<Mesh>();
+		City.Size size = City.GenerateCity(buildingsMeshes, billboardsMeshes, lightStreakMeshes,
 		                                   city_width, city_length,
 		                                   20, 20,
 		                                   block_width, block_length, street_width,
@@ -109,12 +110,13 @@ public class CityBuilder : MonoBehaviour {
 		width = size.width;
 		length = size.length;
 
- 		ApplyMeshes(BuildingPatch, buildingsMeshes, billboardsMeshes);
+ 		ApplyMeshes(BuildingPatch, buildingsMeshes, billboardsMeshes, lightStreakMeshes);
 	}
 
 	private void ApplyMeshes(GameObject patchObject,
 							 List<Mesh> buildingsMeshes,
-							 List<Mesh> billboadsMeshes) {
+							 List<Mesh> billboadsMeshes,
+							 List<Mesh> lightStreakMeshes) {
 		var numberOfMeshes = buildingsMeshes.Count;
 
 		// Destroy over numbered children
@@ -137,11 +139,14 @@ public class CityBuilder : MonoBehaviour {
 			// FIXME: deduce bounding box from deformation.
             buildingsMeshes[i].bounds = new Bounds(Vector3.zero, 2000.0f * Vector3.one);
             billboadsMeshes[i].bounds = new Bounds(Vector3.zero, 2000.0f * Vector3.one);
+            lightStreakMeshes[i].bounds = new Bounds(Vector3.zero, 2000.0f * Vector3.one);
 
             string path_building = "Assets/Meshes/City/Building[" + i + "].asset";
             string path_billboard = "Assets/Meshes/City/Billboard[" + i + "].asset";
+            string path_lightstreak = "Assets/Meshes/City/LightStreak[" + i + "].asset";
             AssetDatabase.CreateAsset(buildingsMeshes[i], path_building);
             AssetDatabase.CreateAsset(billboadsMeshes[i], path_billboard);
+            AssetDatabase.CreateAsset(lightStreakMeshes[i], path_lightstreak);
             meshFilter.sharedMesh = AssetDatabase.LoadAssetAtPath(path_building, typeof(Mesh)) as Mesh;
 
 			var m1 = child.GetComponent<Renderer>().sharedMaterial;

@@ -55,6 +55,7 @@ public class City {
 
 	public static void GeneratePatch(Mesh patchShader1,
 									 Mesh patchShader2,
+									 Mesh patchShader3,
 	                                 int i0,
 	                                 int j0,
 	                                 int patchWidthInCells,
@@ -74,6 +75,7 @@ public class City {
 		Debug.Log("Generate patch [" + patchWidthInCells + " x " + patchLengthInCells +"]");
 		CombineInstance[] combine1 = new CombineInstance[2 * patchWidthInCells * patchLengthInCells];
 		CombineInstance[] combine2 = new CombineInstance[patchWidthInCells * patchLengthInCells];
+		CombineInstance[] combine3 = new CombineInstance[patchWidthInCells * patchLengthInCells];
 
 		for (var j = 0; j < patchLengthInCells; ++j) {
 			for (var i = 0; i < patchWidthInCells; ++i) {
@@ -104,7 +106,8 @@ public class City {
 				combine1[index * 2].transform = Extensions.TranslationMatrix(x, 0.0f, y);
 				combine2[index].mesh = meshes.BillboardAd;
 				combine2[index].transform = Extensions.TranslationMatrix(x, 0.0f, y);
-
+				combine3[index].mesh = meshes.LightStreak;
+				combine3[index].transform = Extensions.TranslationMatrix(x, 0.0f, y);
 				var x1 = GridToPosition(i + 1, i0,
 										blockWidthInCells, streetWidth,
 										largeBlockWidthInCells, largeStreetWidth,
@@ -119,10 +122,12 @@ public class City {
 		}
 		patchShader1.CombineMeshes(combine1);
 		patchShader2.CombineMeshes(combine2);
+		patchShader3.CombineMeshes(combine3);
 	}
 
 	public static Size GenerateCity(List<Mesh> meshesShader1,
 									List<Mesh> meshesShader2,
+									List<Mesh> meshesShader3,
 									int cityWidthInCells,
 	                                int cityLengthInCells,
 	                                int idealPatchWidthInCells,
@@ -145,16 +150,18 @@ public class City {
 			for (var i = 0; i < cityWidthInCells; i += idealPatchWidthInCells) {
 				var patchShader1 = new Mesh();
 				var patchShader2 = new Mesh();
+				var patchShader3 = new Mesh();
 				var patchWidth = Mathf.Min(idealPatchWidthInCells, cityWidthInCells - i);
 				var patchLength = Mathf.Min(idealPatchLengthInCells, cityLengthInCells - j);
 
-				GeneratePatch(patchShader1, patchShader2, i - cityWidthInCells / 2, j - cityLengthInCells / 2, patchWidth, patchLength,
+				GeneratePatch(patchShader1, patchShader2, patchShader3, i - cityWidthInCells / 2, j - cityLengthInCells / 2, patchWidth, patchLength,
 				              blockWidthInCells, blockLengthInCells, streetWidth,
 				              largeBlockWidthInCells, largeBlockLengthInCells, largeStreetWidth,
 				              cellWidth, cellLength,
 				              buildingAverageHeight, noise, styleA, styleB);
 				meshesShader1.Add(patchShader1);
 				meshesShader2.Add(patchShader2);
+				meshesShader3.Add(patchShader3);
 			}
 		}
 
