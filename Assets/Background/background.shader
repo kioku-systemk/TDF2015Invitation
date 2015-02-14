@@ -6,6 +6,7 @@
 	}
 	SubShader {
 		Tags { "RenderType"="Opaque" }
+		Fog { Mode Off }
 		Cull Front
 		LOD 200
 
