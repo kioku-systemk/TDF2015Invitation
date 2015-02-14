@@ -153,7 +153,7 @@ public class CityBuilder : MonoBehaviour {
 			m1.SetFloat("_maxWidth",	width);
 			m1.SetFloat("_maxLength",	length);
 
-
+			//------------
 			var subChild = child.GetChild(0);
 			var subMeshFilter = subChild.GetComponent<MeshFilter>();
             subMeshFilter.sharedMesh = AssetDatabase.LoadAssetAtPath(path_billboard, typeof(Mesh)) as Mesh;
@@ -161,6 +161,15 @@ public class CityBuilder : MonoBehaviour {
 			var m2 = subChild.GetComponent<Renderer>().sharedMaterial;
 			m2.SetFloat("_maxWidth",	width);
 			m2.SetFloat("_maxLength",	length);
+
+			//------------
+			/*subChild = child.GetChild(1);
+			subMeshFilter = subChild.GetComponent<MeshFilter>();
+            subMeshFilter.sharedMesh = AssetDatabase.LoadAssetAtPath(path_lightstreak, typeof(Mesh)) as Mesh;
+
+			var m3 = subChild.GetComponent<Renderer>().sharedMaterial;
+			m3.SetFloat("_maxWidth",	width);
+			m3.SetFloat("_maxLength",	length);*/
 		}
 	}
 #endif // UNITY_EDITOR
