@@ -52,7 +52,7 @@ Material:
       data:
         first:
           name: _vertexDeformation
-        second: 1
+        second: 0
       data:
         first:
           name: _maxWidth
@@ -61,6 +61,14 @@ Material:
         first:
           name: _maxLength
         second: 1409
+      data:
+        first:
+          name: _vertexTranslation
+        second: 0
+      data:
+        first:
+          name: _vertexLatTranslation
+        second: 0
       data:
         first:
           name: _effectWindowsLights
@@ -77,10 +85,6 @@ Material:
         first:
           name: _effect4Intensity
         second: 1
-      data:
-        first:
-          name: _vertexTranslation
-        second: 0
       data:
         first:
           name: _waveHeight
@@ -124,10 +128,6 @@ Material:
       data:
         first:
           name: _time
-        second: 0
-      data:
-        first:
-          name: _vertexLatTranslation
         second: 0
     m_Colors:
       data:
