@@ -1,6 +1,7 @@
 ﻿Shader "Custom/WorldDeformation" {
 	Properties {
 		_vertexTranslation ("vertex translation", Float) = 0.0
+		_vertexLatTranslation ("vertex lateral translation", Float) = 0.0
 		_vertexDeformation ("vertex deformation", Range(0, 1.0)) = 0.0
 		_maxWidth  ("Max width",  Float) = 1.0
 		_maxLength ("Max length", Float) = 1.0
@@ -92,6 +93,7 @@
 		uniform float4 _neonYellowColor;
 
 		uniform float _vertexTranslation;
+		uniform float _vertexLatTranslation;
 		uniform float _vertexDeformation;
 		uniform float _maxWidth;
 		uniform float _maxLength;
@@ -174,6 +176,7 @@
 
 		void vert (inout appdata_full v) {
 			float4 p = v.vertex;
+			p.x += fmod(0.5 * _maxWidth + _vertexLatTranslation, _maxWidth) - 0.5 * _maxWidth;
 			p.z += fmod(0.25 * _maxLength + _vertexTranslation, _maxLength);
 
 			float4x4 transform = T(p.xz);
