@@ -1,4 +1,4 @@
-﻿Shader "Custom/WorldDeformation" {
+﻿Shader "Custom/WorldDeformationBillboardAd" {
 	Properties {
 		_vertexTranslation ("vertex translation", Float) = 0.0
 		_vertexLatTranslation ("vertex lateral translation", Float) = 0.0
