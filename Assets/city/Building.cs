@@ -97,8 +97,8 @@ public class Building {
 		float colg = Random.Range(0.0f, 1.0f);
 		float colb = Random.Range(0.0f, 1.0f);
 		float cola = Random.Range(0.0f, 1.0f);
-		float ylevel1 = Random.Range(0.0f, 1.0f) + 0.1;
-		float ylevel2 = Random.Range(0.0f, 1.0f) + 0.1;
+		float ylevel1 = Random.Range(0.0f, 1.0f) + 0.1f;
+		float ylevel2 = Random.Range(0.0f, 1.0f) + 0.1f;
 		Color32 col = new Color(colr, colg, colb, cola);
 		/*
 		mesh.vertices  = new Vector3[] {
