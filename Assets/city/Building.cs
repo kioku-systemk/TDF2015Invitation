@@ -86,25 +86,37 @@ public class Building {
 	{
 		Mesh mesh = lightStreak;
 		// TODO: Generate polygons
-		mesh.vertices = new Vector3[] {new Vector3(0, 0, 0), new Vector3(0, 1, 0), new Vector3(1, 1, 0), new Vector3(1, 0, 0),  //front
-                                        new Vector3(1, 0, 1), new Vector3(1, 1, 1), new Vector3(0, 1, 1), new Vector3(0, 0, 1),  //back
-                                        new Vector3(1, 0, 0), new Vector3(1, 1, 0), new Vector3(1, 1, 1), new Vector3(1, 0, 1),  //right
-                                        new Vector3(0, 0, 1), new Vector3(0, 1, 1), new Vector3(0, 1, 0), new Vector3(0, 0, 0),  //left
-                                        new Vector3(0, 1, 0), new Vector3(0, 1, 1), new Vector3(1, 1, 1), new Vector3(1, 1, 0),  //top
-                                        new Vector3(0, 0, 0), new Vector3(0, 0, 1), new Vector3(1, 0, 1), new Vector3(1, 0, 0)}; //bottom
-         mesh.uv = new Vector2[] {new Vector2(0, 0),    new Vector2(0, 1),    new Vector2(1, 1),    new Vector2 (1, 0),
-                                  new Vector2(0, 0),    new Vector2(0, 1),    new Vector2(1, 1),    new Vector2 (1, 0),
-                                  new Vector2(0, 0),    new Vector2(0, 1),    new Vector2(1, 1),    new Vector2 (1, 0),
-                                  new Vector2(0, 0),    new Vector2(0, 1),    new Vector2(1, 1),    new Vector2 (1, 0),
-                                  new Vector2(0, 0),    new Vector2(0, 1),    new Vector2(1, 1),    new Vector2 (1, 0),
-                                  new Vector2(0, 0),    new Vector2(0, 1),    new Vector2(1, 1),    new Vector2 (1, 0)};
-         mesh.triangles = new int[] {0,1,2,0,2,3,4,5,6,4,6,7,8,9,10,8,10,11,12,13,14,12,14,15,16,17,18,16,18,19,20,21,22,20,22,23};
-         mesh.normals = new Vector3[] {new Vector3( 0, 0,-1),new Vector3( 0, 0,-1),new Vector3( 0, 0,-1),new Vector3( 0, 0,-1),  //front
-                                       new Vector3( 0, 0, 1),new Vector3( 0, 0, 1),new Vector3( 0, 0, 1),new Vector3( 0, 0, 1),  //back
-                                       new Vector3( 1, 0, 0),new Vector3( 1, 0, 0),new Vector3( 1, 0, 0),new Vector3( 1, 0, 0),  //right
-                                       new Vector3(-1, 0, 0),new Vector3(-1, 0, 0),new Vector3(-1, 0, 0),new Vector3(-1, 0, 0),  //left
-                                       new Vector3( 0, 1, 0),new Vector3( 0, 1, 0),new Vector3( 0, 1, 0),new Vector3( 0, 1, 0),  //top
-	                                   new Vector3( 0,-1, 0),new Vector3( 0,-1, 0),new Vector3( 0,-1, 0),new Vector3( 0,-1, 0)}; //bottom
+		float rnd1 = 6.0f + Random.Range(0.1f, 10.0f);
+		float rnd2 = 5.0f + Random.Range(0.1f, 10.0f);
+		float wid1 = 0.1f + Random.Range(0.1f, 0.5f);
+		float wid2 = 0.1f + Random.Range(0.1f, 0.5f);
+		float pos1 = Random.Range(0.0f, 1.0f);
+		float pos2 = Random.Range(0.0f, 1.0f);
+		float colr = Random.Range(0.0f, 255.0f);
+		float colg = Random.Range(0.0f, 255.0f);
+		float colb = Random.Range(0.0f, 255.0f);
+		float cola = Random.Range(0.0f, 255.0f);
+		Color32 col = new Color(colr, colg, colb, cola);
+		mesh.vertices  = new Vector3[] {
+			new Vector3(0-rnd1, 1, 0), new Vector3(0-rnd1, 1, 100), new Vector3(wid1-rnd1, 1, 100), new Vector3(wid1-rnd1, 1, 0),
+			new Vector3(0+rnd2, 1, 0), new Vector3(0+rnd2, 1, 100), new Vector3(wid2+rnd2, 1, 100), new Vector3(wid2+rnd2, 1, 0)
+		};
+        mesh.uv        = new Vector2[] {
+        	new Vector2(pos1, 0), new Vector2(pos1, 1), new Vector2(pos1, 1), new Vector2 (pos1, 0),
+         	new Vector2(pos2, 0), new Vector2(pos2, 1), new Vector2(pos2, 1), new Vector2 (pos2, 0)
+        };
+        mesh.normals   = new Vector3[] {
+        	new Vector3( 0, 1, 0),new Vector3( 0, 1, 0),new Vector3( 0, 1, 0),new Vector3( 0, 1, 0),
+      		new Vector3( 0, 1, 0),new Vector3( 0, 1, 0),new Vector3( 0, 1, 0),new Vector3( 0, 1, 0)
+        };
+        mesh.colors32   = new Color32[] {
+        	col, col, col, col,
+      		col, col, col, col
+        };
+        mesh.triangles = new int[] {
+        	0  ,1  ,2  ,0  ,2  ,3  ,
+			0+4,1+4,2+4,0+4,2+4,3+4
+        };
 	}
 	public static Meshes Generate(float averageHeight,		/// Average height of the building
 								  float maxWidth,			/// Max width of the building
