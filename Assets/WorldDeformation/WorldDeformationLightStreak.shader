@@ -226,7 +226,7 @@
 		void surf (Input IN, inout SurfaceOutput o) {
 			float3 color = GetAdColor(IN);
 			float anim = fmod(abs((IN.uv_fstTex.y + _move * IN.uv_fstTex.x) * 0.1f), 1.0); // light move animation
-			o.Emission = float3(anim,anim,anim); //GlowAd(IN, color) * anim;               // How to get unity property Color??
+			o.Emission = float3(anim,anim,anim) * color; //GlowAd(IN, color);               // How to get unity property Color??
 			o.Alpha = anim;                                                                // Fade out the tail
 			o.Albedo = float3(0,0,0);                                                      // Emittion only
 		}
