@@ -16,8 +16,8 @@
 
 		// _effectWindowsLights ("Windows lights", Range(0.0, 1.0)) = 0.0
 		// _effectEdgeGlow ("Effect edge glow", Range(0.0, 1.0)) = 0.0
-		_effectBillboardAd1 ("Billboard Ad 1", Range(0.0, 1.0)) = 0.0
-		_effectBillboardAd2 ("Billboard Ad 2", Range(0.0, 1.0)) = 0.0
+		//_effectBillboardAd1 ("Billboard Ad 1", Range(0.0, 1.0)) = 0.0
+		//_effectBillboardAd2 ("Billboard Ad 2", Range(0.0, 1.0)) = 0.0
 
 		_move ("light streak move", Float) = 0.0
 		
