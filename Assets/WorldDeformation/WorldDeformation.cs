@@ -14,8 +14,5 @@ public class WorldDeformation : MonoBehaviour {
 		m.SetFloat("_vertexTranslation",	parameters.vertex_translation);
 		m.SetFloat("_vertexLatTranslation",	parameters.vertex_lat_translation);
 		m.SetFloat("_vertexDeformation",	parameters.vertex_deformation);
-
-		//Debug.Log("_vertexTranslation " + parameters.vertex_translation);
-		//Debug.Log("_vertexDeformation " + parameters.vertex_deformation);
 	}
 }

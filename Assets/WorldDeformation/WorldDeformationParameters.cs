@@ -13,7 +13,7 @@ public class WorldDeformationParameters : MonoBehaviour {
 
 	// ---8<------------------------------------------------------------------
 
-	GUIStyle debugFont;
+	private GUIStyle debugFont;
 
 	void Start () {
 		debugFont = new GUIStyle();

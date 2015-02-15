@@ -2,27 +2,35 @@
 using System.Collections;
 
 public class WorldDeformationText : MonoBehaviour {
-	private WorldDeformationParameters parameters = null;
+	private GameObject parameters = null;
 
-	private Vector3 position;
-	private Quaternion rotation;
+// 	private Vector3 position;
+// 	private Quaternion rotation;
+
+	private GUIStyle debugFont;
+
 
 	void Start () {
-		parameters = GameObject.Find("GlobalParameters").GetComponent<WorldDeformationParameters>();
+		parameters = GameObject.Find("GlobalParameters");
 
-		position = transform.localPosition;
-		rotation = transform.localRotation;
+// 		position = transform.position;
+// 		rotation = transform.localRotation;
 
-		Debug.Log("Text original position : {" + position.x + ", " + position.y + ", " + position.z + "}");
+		debugFont = new GUIStyle();
+		debugFont.fontSize = 24;
+		debugFont.normal.textColor = Color.cyan;
 	}
 
-	private void Update () {
-		transform.localPosition = new Vector3(position.x,
-									position.y + parameters.vertex_translation,
-									position.z);
+	private void LateUpdate () {
+		var m = GetComponent<Renderer>().sharedMaterial;
+		var translation = m.GetFloat("_vertexTranslation");
+		var lat_translation = m.GetFloat("_vertexLatTranslation");
 
-		//Debug.Log("Translation: " + parameters.vertex_translation.ToString() + "\n" +
-		//          //"Deformation: " + parameters.vertex_deformation.ToString() + "\n" +
-		//          "Position: " + transform.localPosition.ToString());
+		var newPosition = new Vector3(translation, 0.0f, lat_translation);
+		transform.position = newPosition;
+	}
+
+	void OnGUI() {
+		GUI.Label(new Rect(100f, 150f, 200f, 100f), "Position: " + transform.position.ToString(), debugFont);
 	}
 }
