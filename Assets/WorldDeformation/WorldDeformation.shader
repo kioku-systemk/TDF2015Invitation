@@ -212,8 +212,8 @@
 			float intensity = lerp(0.6, 1.0, clamp(2.0 * hashValue, 0.0, 1.0));
 			float trigger = hashValue * 2.5; // x2 because we don't want everything to be lit
 
-			float windows = (smoothstep(0.25, 0.2, abs(frac(IN.uv_fstTex.x) - 0.5)) *
-							 smoothstep(0.25, 0.2, abs(frac(IN.uv_fstTex.y) - 0.5)));
+			float windows = (smoothstep(0.37, 0.33, abs(frac(IN.uv_fstTex.x) - 0.5)) *
+							 smoothstep(0.22, 0.18, abs(frac(IN.uv_fstTex.y) - 0.5)));
 
 			//return float3(frac(IN.uv_fstTex).xy, 0.0);
 			return lightColor * windows * intensity * smoothstep(trigger, trigger + 0.01, _effectWindowsLights);
