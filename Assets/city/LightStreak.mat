@@ -38,7 +38,7 @@ Material:
       data:
         first:
           name: _vertexDeformation
-        second: 0
+        second: 1
       data:
         first:
           name: _maxWidth
@@ -83,8 +83,8 @@ Material:
       data:
         first:
           name: _adColor3
-        second: {r: .852941155, g: .269031137, b: .00627163192, a: 1}
+        second: {r: .80622834, g: .00627168315, b: .852941155, a: 1}
       data:
         first:
           name: _adColor4
-        second: {r: .255730212, g: .904411793, b: 0, a: 1}
+        second: {r: .937254906, g: .0784313753, b: 0, a: 1}
