@@ -4053,6 +4053,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1168310450}
   - 114: {fileID: 1168310449}
+  - 95: {fileID: 1168310451}
   m_Layer: 0
   m_Name: GlobalParameters
   m_TagString: Untagged
@@ -4087,6 +4088,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 8
+--- !u!95 &1168310451
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1168310448}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 3f778a5d0fcbb5845847c5b1682d1d2b, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 1
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!1001 &1171012423
 Prefab:
   m_ObjectHideFlags: 0
@@ -6894,10 +6910,6 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11441032, guid: de105d8756e905346be4238553fa5a09, type: 2}
       propertyPath: vertex_lat_translation
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 11441032, guid: de105d8756e905346be4238553fa5a09, type: 2}
-      propertyPath: vertex_translation
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
