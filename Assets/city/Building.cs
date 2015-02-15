@@ -89,10 +89,10 @@ public class Building {
 		// TODO: Generate polygons
 		float rnd1 =  8.0f + Random.Range(0.1f, 4.0f); // random position(on the road)
 		float rnd2 = 16.0f + Random.Range(0.1f, 4.0f);
-		float wid1 = 0.1f + Random.Range(0.1f, 0.5f);  // Line width
-		float wid2 = 0.1f + Random.Range(0.1f, 0.5f); 
-		float pos1 = Random.Range(0.0f, 1.0f);         // random positon for direction
-		float pos2 = Random.Range(0.0f, 1.0f);
+		float wid1 = Random.Range(1.5f, 2.0f);  // Line width
+		float wid2 = Random.Range(1.5f, 2.0f); 
+// 		float pos1 = Random.Range(0.0f, 1.0f);         // random positon for direction
+// 		float pos2 = Random.Range(0.0f, 1.0f);
 		float colr = Random.Range(0.0f, 1.0f);         // colors for hash
 		float colg = Random.Range(0.0f, 1.0f);
 		float colb = Random.Range(0.0f, 1.0f);
@@ -138,14 +138,14 @@ public class Building {
 		 	vtx.Add(new Vector3(0+rnd2,    ylevel2, (offset+1)*divlen));
 		 	vtx.Add(new Vector3(wid2+rnd2, ylevel2, (offset+1)*divlen));
 		 	vtx.Add(new Vector3(wid2+rnd2, ylevel2, (offset+0)*divlen));
-		   	uv.Add(new Vector2(pos1, -   i /(float)maxdiv));
-		   	uv.Add(new Vector2(pos1, -(1+i)/(float)maxdiv));
-		   	uv.Add(new Vector2(pos1, -(1+i)/(float)maxdiv));
-		   	uv.Add(new Vector2(pos1, -   i /(float)maxdiv));
-         	uv.Add(new Vector2(pos2,     i /(float)maxdiv));
-         	uv.Add(new Vector2(pos2,  (1+i)/(float)maxdiv));
-	       	uv.Add(new Vector2(pos2,  (1+i)/(float)maxdiv));
-         	uv.Add(new Vector2(pos2,    i /(float)maxdiv));
+		   	uv.Add(new Vector2(0.0f, -   i /(float)maxdiv));
+		   	uv.Add(new Vector2(0.0f, -(1+i)/(float)maxdiv));
+		   	uv.Add(new Vector2(1.0f, -(1+i)/(float)maxdiv));
+		   	uv.Add(new Vector2(1.0f, -   i /(float)maxdiv));
+         	uv.Add(new Vector2(0.0f,     i /(float)maxdiv));
+         	uv.Add(new Vector2(0.0f,  (1+i)/(float)maxdiv));
+	       	uv.Add(new Vector2(1.0f,  (1+i)/(float)maxdiv));
+         	uv.Add(new Vector2(1.0f,    i /(float)maxdiv));
          	for (int j = 0; j < 8; ++j) {
 	    		nor.Add(new Vector3( 0, 1, 0));
 	   		    col32.Add(col);

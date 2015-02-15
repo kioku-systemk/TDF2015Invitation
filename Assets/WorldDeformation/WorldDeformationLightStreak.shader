@@ -155,8 +155,9 @@ float4 frag(v2f IN) : SV_Target
 	ret.rgb = color.rgb;//0.0*float3(anim,anim,anim) * color.rgb;
 
 	float visible = smoothstep(IN.color.b, IN.color.b + 0.1, 1.1 * _effectCars);
+	float leftRight = clamp(2.0 - 2.0 * abs(2.0 * abs(2.0 * IN.texcoord.x - 1.0) - 1.5), 0.0, 1.0);
 	float trail = frac(IN.texcoord.y - _move);
-	ret.a = color.a * visible * trail;
+	ret.a = color.a * visible * trail * leftRight;
 
 	return ret;
 }
