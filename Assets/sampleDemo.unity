@@ -425,7 +425,7 @@ Prefab:
       objectReference: {fileID: 9100000, guid: b0fa037bbde3aff4abe371a3fa9c0866, type: 2}
     - target: {fileID: 132818, guid: b8cb955ab2f3bbc4fa21146d4055358c, type: 2}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b8cb955ab2f3bbc4fa21146d4055358c, type: 2}
@@ -3950,6 +3950,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   vertex_translation: 0
+  vertex_lat_translation: 0
   vertex_deformation: 1
 --- !u!4 &1168310450
 Transform:
@@ -4079,7 +4080,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!81 &1171505397
 AudioListener:
   m_ObjectHideFlags: 0
@@ -4433,7 +4434,7 @@ Prefab:
       objectReference: {fileID: 981524459}
     - target: {fileID: 11491104, guid: 914d2b7f12a6ff54fa48f60200229d89, type: 2}
       propertyPath: m_time
-      value: 74.6999969
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 914d2b7f12a6ff54fa48f60200229d89, type: 2}
@@ -6404,7 +6405,7 @@ MonoBehaviour:
   m_roots_of_animated_objects:
   - {fileID: 144236240}
   m_music_player: {fileID: 981524459}
-  m_time: 74.6999969
+  m_time: 0
 --- !u!4 &1830502260
 Transform:
   m_ObjectHideFlags: 0
@@ -6599,6 +6600,10 @@ Prefab:
     - target: {fileID: 11441032, guid: de105d8756e905346be4238553fa5a09, type: 2}
       propertyPath: vertex_deformation
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11441032, guid: de105d8756e905346be4238553fa5a09, type: 2}
+      propertyPath: vertex_lat_translation
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: de105d8756e905346be4238553fa5a09, type: 2}

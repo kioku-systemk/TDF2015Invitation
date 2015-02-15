@@ -63,6 +63,10 @@ Material:
         first:
           name: _move
         second: 0
+      data:
+        first:
+          name: _vertexLatTranslation
+        second: 0
     m_Colors:
       data:
         first:

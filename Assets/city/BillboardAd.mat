@@ -38,7 +38,7 @@ Material:
       data:
         first:
           name: _vertexDeformation
-        second: 0
+        second: 1
       data:
         first:
           name: _maxWidth
@@ -86,6 +86,10 @@ Material:
       data:
         first:
           name: _effectBillboardAd2
+        second: 0
+      data:
+        first:
+          name: _vertexLatTranslation
         second: 0
     m_Colors:
       data:
