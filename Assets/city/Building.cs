@@ -97,6 +97,8 @@ public class Building {
 		float colg = Random.Range(0.0f, 1.0f);
 		float colb = Random.Range(0.0f, 1.0f);
 		float cola = Random.Range(0.0f, 1.0f);
+		float ylevel1 = Random.Range(0.0f, 1.0f) + 0.1;
+		float ylevel2 = Random.Range(0.0f, 1.0f) + 0.1;
 		Color32 col = new Color(colr, colg, colb, cola);
 		/*
 		mesh.vertices  = new Vector3[] {
@@ -128,14 +130,14 @@ public class Building {
         int divlen = 10;
         for (int i = 0; i < maxdiv; ++i) {
         	float offset = (float)i;
-		 	vtx.Add(new Vector3(0-rnd1,    1, (offset+0)*divlen));
-		 	vtx.Add(new Vector3(0-rnd1,    1, (offset+1)*divlen));
-		 	vtx.Add(new Vector3(wid1-rnd1, 1, (offset+1)*divlen));
-		 	vtx.Add(new Vector3(wid1-rnd1, 1, (offset+0)*divlen));
-		 	vtx.Add(new Vector3(0+rnd2,    1, (offset+0)*divlen));
-		 	vtx.Add(new Vector3(0+rnd2,    1, (offset+1)*divlen));
-		 	vtx.Add(new Vector3(wid2+rnd2, 1, (offset+1)*divlen));
-		 	vtx.Add(new Vector3(wid2+rnd2, 1, (offset+0)*divlen));
+		 	vtx.Add(new Vector3(0-rnd1,    ylevel1, (offset+0)*divlen));
+		 	vtx.Add(new Vector3(0-rnd1,    ylevel1, (offset+1)*divlen));
+		 	vtx.Add(new Vector3(wid1-rnd1, ylevel1, (offset+1)*divlen));
+		 	vtx.Add(new Vector3(wid1-rnd1, ylevel1, (offset+0)*divlen));
+		 	vtx.Add(new Vector3(0+rnd2,    ylevel2, (offset+0)*divlen));
+		 	vtx.Add(new Vector3(0+rnd2,    ylevel2, (offset+1)*divlen));
+		 	vtx.Add(new Vector3(wid2+rnd2, ylevel2, (offset+1)*divlen));
+		 	vtx.Add(new Vector3(wid2+rnd2, ylevel2, (offset+0)*divlen));
 		   	uv.Add(new Vector2(pos1, -   i /(float)maxdiv));
 		   	uv.Add(new Vector2(pos1, -(1+i)/(float)maxdiv));
 		   	uv.Add(new Vector2(pos1, -(1+i)/(float)maxdiv));
