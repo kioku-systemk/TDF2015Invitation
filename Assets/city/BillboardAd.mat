@@ -49,6 +49,22 @@ Material:
         second: 1409
       data:
         first:
+          name: _vertexTranslation
+        second: 0
+      data:
+        first:
+          name: _effectBillboardAd1
+        second: 0
+      data:
+        first:
+          name: _effectBillboardAd2
+        second: 0
+      data:
+        first:
+          name: _vertexLatTranslation
+        second: 0
+      data:
+        first:
           name: _effectWindowsLights
         second: 0
       data:
@@ -65,10 +81,6 @@ Material:
         second: 1
       data:
         first:
-          name: _vertexTranslation
-        second: 0
-      data:
-        first:
           name: _effectBillboardAd
         second: 0
       data:
@@ -79,18 +91,6 @@ Material:
         first:
           name: _patchLength
         second: 1
-      data:
-        first:
-          name: _effectBillboardAd1
-        second: 0
-      data:
-        first:
-          name: _effectBillboardAd2
-        second: 0
-      data:
-        first:
-          name: _vertexLatTranslation
-        second: 0
     m_Colors:
       data:
         first:
