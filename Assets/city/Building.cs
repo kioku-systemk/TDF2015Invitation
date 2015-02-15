@@ -87,8 +87,8 @@ public class Building {
 	{
 		Mesh mesh = lightStreak;
 		// TODO: Generate polygons
-		float rnd1 = 6.0f + Random.Range(0.1f, 10.0f); // random position(on the road)
-		float rnd2 = 5.0f + Random.Range(0.1f, 10.0f);
+		float rnd1 =  8.0f + Random.Range(0.1f, 4.0f); // random position(on the road)
+		float rnd2 = 16.0f + Random.Range(0.1f, 4.0f);
 		float wid1 = 0.1f + Random.Range(0.1f, 0.5f);  // Line width
 		float wid2 = 0.1f + Random.Range(0.1f, 0.5f); 
 		float pos1 = Random.Range(0.0f, 1.0f);         // random positon for direction
@@ -132,17 +132,17 @@ public class Building {
 		 	vtx.Add(new Vector3(0-rnd1,    1, (offset+1)*divlen));
 		 	vtx.Add(new Vector3(wid1-rnd1, 1, (offset+1)*divlen));
 		 	vtx.Add(new Vector3(wid1-rnd1, 1, (offset+0)*divlen));
-		 	vtx.Add(new Vector3(0+rnd2,    1, offset+0));
-		 	vtx.Add(new Vector3(0+rnd2,    1, offset+1));
-		 	vtx.Add(new Vector3(wid2+rnd2, 1, offset+1));
-		 	vtx.Add(new Vector3(wid2+rnd2, 1, offset+0));
-		   	uv.Add(new Vector2(pos1,    i /(float)maxdiv));
-		   	uv.Add(new Vector2(pos1, (1+i)/(float)maxdiv));
-		   	uv.Add(new Vector2(pos1, (1+i)/(float)maxdiv));
-		   	uv.Add(new Vector2(pos1,    i /(float)maxdiv));
-         	uv.Add(new Vector2(pos2,    i /(float)maxdiv));
-         	uv.Add(new Vector2(pos2, (1+i)/(float)maxdiv));
-	       	uv.Add(new Vector2(pos2, (1+i)/(float)maxdiv));
+		 	vtx.Add(new Vector3(0+rnd2,    1, (offset+0)*divlen));
+		 	vtx.Add(new Vector3(0+rnd2,    1, (offset+1)*divlen));
+		 	vtx.Add(new Vector3(wid2+rnd2, 1, (offset+1)*divlen));
+		 	vtx.Add(new Vector3(wid2+rnd2, 1, (offset+0)*divlen));
+		   	uv.Add(new Vector2(pos1, -   i /(float)maxdiv));
+		   	uv.Add(new Vector2(pos1, -(1+i)/(float)maxdiv));
+		   	uv.Add(new Vector2(pos1, -(1+i)/(float)maxdiv));
+		   	uv.Add(new Vector2(pos1, -   i /(float)maxdiv));
+         	uv.Add(new Vector2(pos2,     i /(float)maxdiv));
+         	uv.Add(new Vector2(pos2,  (1+i)/(float)maxdiv));
+	       	uv.Add(new Vector2(pos2,  (1+i)/(float)maxdiv));
          	uv.Add(new Vector2(pos2,    i /(float)maxdiv));
          	for (int j = 0; j < 8; ++j) {
 	    		nor.Add(new Vector3( 0, 1, 0));
