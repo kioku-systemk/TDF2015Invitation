@@ -122,6 +122,7 @@ float4x4 T(float2 p2d) {
 
 struct v2f
 {
+	fixed4 color : COLOR;
 	float4 vertex : SV_POSITION;
 	float4 texcoord : TEXCOORD0;
 };
@@ -136,6 +137,7 @@ v2f vert(appdata_full v)
 	v.vertex = mul(p - float4(p.x, 0.0, p.z, 0.0), transform);
 
 	v2f ret;
+	ret.color = v.color;
 	ret.vertex = mul(UNITY_MATRIX_MVP, v.vertex);
 	ret.texcoord = v.texcoord;
 	return ret;
@@ -148,10 +150,14 @@ float4 frag(v2f IN) : SV_Target
 {
 	float4 color = lerp(_headLightColor, _stopLightColor, float(IN.texcoord.y > 0.0));
 
-	float anim = 1.0;//fmod(abs((IN.texcoord.y + _move * IN.texcoord.x) * 0.1f), 1.0); // light move animation
+	//float anim = fmod(abs((IN.texcoord.y + _move * IN.texcoord.x) * 0.1f), 1.0); // light move animation
 	float4 ret;
 	ret.rgb = color.rgb;//0.0*float3(anim,anim,anim) * color.rgb;
-	ret.a = color.a * _effectCars * frac(IN.texcoord.y - _move); // Fade out the tail
+
+	float visible = smoothstep(IN.color.b, IN.color.b + 0.1, 1.1 * _effectCars);
+	float trail = frac(IN.texcoord.y - _move);
+	ret.a = color.a * visible * trail;
+
 	return ret;
 }
 
