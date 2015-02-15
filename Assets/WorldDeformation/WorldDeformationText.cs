@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class WorldDeformationText : MonoBehaviour {
-	private GameObject parameters = null;
+	WorldDeformationParameters parameters;
 
 // 	private Vector3 position;
 // 	private Quaternion rotation;
@@ -10,21 +10,19 @@ public class WorldDeformationText : MonoBehaviour {
 	private GUIStyle debugFont;
 
 
-	void Start () {
-		parameters = GameObject.Find("GlobalParameters");
-
-// 		position = transform.position;
-// 		rotation = transform.localRotation;
+	void Start ()
+	{
+		parameters = GameObject.Find("GlobalParameters").GetComponent<WorldDeformationParameters>();
 
 		debugFont = new GUIStyle();
 		debugFont.fontSize = 24;
 		debugFont.normal.textColor = Color.cyan;
 	}
 
-	private void LateUpdate () {
-		var m = GetComponent<Renderer>().sharedMaterial;
-		var translation = m.GetFloat("_vertexTranslation");
-		var lat_translation = m.GetFloat("_vertexLatTranslation");
+	private void LateUpdate ()
+	{
+		var translation = parameters.vertex_translation;
+		var lat_translation = parameters.vertex_lat_translation;
 
 		var newPosition = new Vector3(translation, 0.0f, lat_translation);
 		transform.position = newPosition;
