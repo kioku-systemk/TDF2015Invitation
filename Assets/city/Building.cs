@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class Building {
 
@@ -86,17 +87,18 @@ public class Building {
 	{
 		Mesh mesh = lightStreak;
 		// TODO: Generate polygons
-		float rnd1 = 6.0f + Random.Range(0.1f, 10.0f);
+		float rnd1 = 6.0f + Random.Range(0.1f, 10.0f); // random position(on the road)
 		float rnd2 = 5.0f + Random.Range(0.1f, 10.0f);
-		float wid1 = 0.1f + Random.Range(0.1f, 0.5f);
-		float wid2 = 0.1f + Random.Range(0.1f, 0.5f);
-		float pos1 = Random.Range(0.0f, 1.0f);
+		float wid1 = 0.1f + Random.Range(0.1f, 0.5f);  // Line width
+		float wid2 = 0.1f + Random.Range(0.1f, 0.5f); 
+		float pos1 = Random.Range(0.0f, 1.0f);         // random positon for direction
 		float pos2 = Random.Range(0.0f, 1.0f);
-		float colr = Random.Range(0.0f, 1.0f);
+		float colr = Random.Range(0.0f, 1.0f);         // colors for hash
 		float colg = Random.Range(0.0f, 1.0f);
 		float colb = Random.Range(0.0f, 1.0f);
 		float cola = Random.Range(0.0f, 1.0f);
 		Color32 col = new Color(colr, colg, colb, cola);
+		/*
 		mesh.vertices  = new Vector3[] {
 			new Vector3(0-rnd1, 1, 0), new Vector3(0-rnd1, 1, 100), new Vector3(wid1-rnd1, 1, 100), new Vector3(wid1-rnd1, 1, 0),
 			new Vector3(0+rnd2, 1, 0), new Vector3(0+rnd2, 1, 100), new Vector3(wid2+rnd2, 1, 100), new Vector3(wid2+rnd2, 1, 0)
@@ -116,7 +118,54 @@ public class Building {
         mesh.triangles = new int[] {
         	0  ,1  ,2  ,0  ,2  ,3  ,
 			0+4,1+4,2+4,0+4,2+4,3+4
-        };
+        };*/
+        List<Vector3> vtx   = new List<Vector3>();
+        List<Vector2> uv    = new List<Vector2>();
+        List<Vector3> nor   = new List<Vector3>();
+        List<Color32> col32 = new List<Color32>();
+        List<int>     idx   = new List<int>();
+        int maxdiv = 10;
+        int divlen = 10;
+        for (int i = 0; i < maxdiv; ++i) {
+        	float offset = (float)i;
+		 	vtx.Add(new Vector3(0-rnd1,    1, (offset+0)*divlen));
+		 	vtx.Add(new Vector3(0-rnd1,    1, (offset+1)*divlen));
+		 	vtx.Add(new Vector3(wid1-rnd1, 1, (offset+1)*divlen));
+		 	vtx.Add(new Vector3(wid1-rnd1, 1, (offset+0)*divlen));
+		 	vtx.Add(new Vector3(0+rnd2,    1, offset+0));
+		 	vtx.Add(new Vector3(0+rnd2,    1, offset+1));
+		 	vtx.Add(new Vector3(wid2+rnd2, 1, offset+1));
+		 	vtx.Add(new Vector3(wid2+rnd2, 1, offset+0));
+		   	uv.Add(new Vector2(pos1,    i /(float)maxdiv));
+		   	uv.Add(new Vector2(pos1, (1+i)/(float)maxdiv));
+		   	uv.Add(new Vector2(pos1, (1+i)/(float)maxdiv));
+		   	uv.Add(new Vector2(pos1,    i /(float)maxdiv));
+         	uv.Add(new Vector2(pos2,    i /(float)maxdiv));
+         	uv.Add(new Vector2(pos2, (1+i)/(float)maxdiv));
+	       	uv.Add(new Vector2(pos2, (1+i)/(float)maxdiv));
+         	uv.Add(new Vector2(pos2,    i /(float)maxdiv));
+         	for (int j = 0; j < 8; ++j) {
+	    		nor.Add(new Vector3( 0, 1, 0));
+	   		    col32.Add(col);
+			}
+			idx.Add(0+i*8);
+			idx.Add(1+i*8);
+			idx.Add(2+i*8);
+			idx.Add(0+i*8);
+			idx.Add(2+i*8);
+			idx.Add(3+i*8);
+			idx.Add(0+i*8+4);
+			idx.Add(1+i*8+4);
+			idx.Add(2+i*8+4);
+			idx.Add(0+i*8+4);
+			idx.Add(2+i*8+4);
+			idx.Add(3+i*8+4);
+   	   	}
+        mesh.vertices = vtx.ToArray();
+        mesh.normals  = nor.ToArray();
+        mesh.uv       = uv.ToArray();
+        mesh.colors32 = col32.ToArray();
+        mesh.triangles= idx.ToArray();
 	}
 	public static Meshes Generate(float averageHeight,		/// Average height of the building
 								  float maxWidth,			/// Max width of the building
