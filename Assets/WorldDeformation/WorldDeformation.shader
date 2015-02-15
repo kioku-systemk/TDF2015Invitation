@@ -11,7 +11,6 @@
 		_neonYellowColor ("Neon yellow color", Color) = (1,1,1,1)
 
 		_effectWindowsLights ("Windows lights", Range(0.0, 1.0)) = 0.0
-		_effectEdgeGlow ("Edge glow", Range(0.0, 1.0)) = 0.0
 		// _effectBillboardAd ("Billboard Ad", Range(0.0, 1.0)) = 0.0
 	}
 	SubShader {
@@ -96,7 +95,6 @@
 		uniform float _maxLength;
 
 		uniform float _effectWindowsLights;
-		uniform float _effectEdgeGlow;
 		// uniform float _effectBillboardAd;
 
 		float4 _spectrum;
@@ -216,20 +214,11 @@
 			return lightColor * windows * intensity * smoothstep(trigger, trigger + 0.01, _effectWindowsLights);
 		}
 
-		float3 GlowEdges(Input IN)
-		{
-			float edges = 1.0 - (smoothstep(0.04, 0.05, frac(IN.uv_fstTex.x)) *
-								 smoothstep(0.04, 0.05, frac(IN.uv2_sndTex.x)) *
-								 smoothstep(0.04, 0.05, frac(IN.uv_fstTex.y)) *
-								 smoothstep(0.04, 0.05, frac(IN.uv2_sndTex.y)));
-			return float3(0.0, 0.45, 0.89) * edges * _effectEdgeGlow;
-		}
-
 		sampler2D _fstTex;
 		sampler2D _sndTex;
 		void surf (Input IN, inout SurfaceOutput o) {
 			//o.Emission = DebugUV(IN);
-			o.Emission = Windows(IN) + GlowEdges(IN);
+			o.Emission = Windows(IN);
 			//o.Emission += _spectrum * 0.25;
 			o.Albedo = _color;// * float4(awesomeShaderEffect(IN), 1.0);
 		}
