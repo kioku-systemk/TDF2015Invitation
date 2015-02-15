@@ -38,7 +38,7 @@ Material:
       data:
         first:
           name: _vertexDeformation
-        second: 1
+        second: 0
       data:
         first:
           name: _maxWidth
@@ -67,6 +67,10 @@ Material:
         first:
           name: _vertexLatTranslation
         second: 0
+      data:
+        first:
+          name: _effectCars
+        second: 1
     m_Colors:
       data:
         first:
@@ -75,7 +79,7 @@ Material:
       data:
         first:
           name: _color
-        second: {r: 1, g: 0, b: 0, a: 1}
+        second: {r: 1, g: 0, b: .765517235, a: 1}
       data:
         first:
           name: _adColor1
@@ -92,3 +96,11 @@ Material:
         first:
           name: _adColor4
         second: {r: .937254906, g: .0784313753, b: 0, a: 1}
+      data:
+        first:
+          name: _headLightColor
+        second: {r: 1, g: .956578732, b: .705882311, a: 1}
+      data:
+        first:
+          name: _stopLightColor
+        second: {r: 1, g: .29411763, b: .29411763, a: 1}

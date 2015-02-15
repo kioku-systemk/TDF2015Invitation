@@ -1,4 +1,4 @@
-﻿Shader "Custom/WorldDeformation" {
+Shader "Custom/WorldDeformation" {
 	Properties {
 		_vertexTranslation ("vertex translation", Float) = 0.0
 		_vertexLatTranslation ("vertex lateral translation", Float) = 0.0
@@ -9,22 +9,16 @@
 		_fstTex ("1st texture", 2D) = "white" {}
 		_sndTex ("2nd texture", 2D) = "white" {}
 
-		_color ("Main Color", Color) = (1,1,1,1)
-		_adColor1 ("Ad color 1", Color) = (1,1,1,1)
-		_adColor2 ("Ad color 2", Color) = (1,1,1,1)
-		_adColor3 ("Ad color 3", Color) = (1,1,1,1)
-		_adColor4 ("Ad color 4", Color) = (1,1,1,1)
+		_headLightColor ("Head light color", Color) = (1,1,1,1)
+		_stopLightColor ("Stop light color", Color) = (1,0,0,1)
 
-		// _effectWindowsLights ("Windows lights", Range(0.0, 1.0)) = 0.0
-		// _effectEdgeGlow ("Effect edge glow", Range(0.0, 1.0)) = 0.0
-		//_effectBillboardAd1 ("Billboard Ad 1", Range(0.0, 1.0)) = 0.0
-		//_effectBillboardAd2 ("Billboard Ad 2", Range(0.0, 1.0)) = 0.0
+		_effectCars ("Car lights", Range(0.0, 1.0)) = 0.0
 
 		_move ("light streak move", Float) = 0.0
 
 	}
 	SubShader {
-		Tags { "RenderType" = "Opaque" }
+		Tags { "RenderType" = "Transparent" }
 
 		CGPROGRAM
 
@@ -42,7 +36,7 @@
 		//               used with custom vertex modification, so that
 		//               shadow casting also gets any procedural
 		//               vertex animation.
-		#pragma surface surf Lambert vertex:vert addshadow
+		#pragma surface surf NoLighting vertex:vert alpha
 
 
 		// Surface Shader input structure
@@ -94,11 +88,8 @@
 		//                      based on per-pixel normal map, use
 		//                      WorldNormalVector (IN, o.Normal).
 
-		uniform float4 _color;
-		uniform float4 _adColor1;
-		uniform float4 _adColor2;
-		uniform float4 _adColor3;
-		uniform float4 _adColor4;
+		uniform float4 _headLightColor;
+		uniform float4 _stopLightColor;
 
 		uniform float _vertexTranslation;
 		uniform float _vertexLatTranslation;
@@ -107,10 +98,7 @@
 		uniform float _maxLength;
 		uniform float _move;
 
-		// uniform float _effectWindowsLights;
-		// uniform float _effectEdgeGlow;
-		uniform float _effectBillboardAd1;
-		uniform float _effectBillboardAd2;
+		uniform float _effectCars;
 
 		float4 _spectrum;
 
@@ -198,40 +186,20 @@
 		// ---8<--------------------------------------------------------------
 		// Fragment shading
 
-		float hash(float2 uv)
-		{
-			return frac(sin(dot(uv, float2(12.9898,78.233))) * 43758.5453);
-		}
-
-		float3 GetAdColor(Input IN)
-		{
-			float2 adId = floor(256.0 * IN.color.xy);
-			float hashValue1 = hash(adId);
-			float hashValue2 = IN.color.z;
-
-			float w1 = smoothstep(0.4, 0.6, hashValue1);
-			float w2 = smoothstep(0.4, 0.6, hashValue2);
-			float3 color1 = lerp(_adColor1.xyz, _adColor2.xyz, w1);
-			float3 color2 = lerp(_adColor3.xyz, _adColor4.xyz, w1);
-			return lerp(color1, color2, w2);
-		}
-
-		float3 GlowAd(Input IN, float3 color)
-		{
-			float level = _spectrum[0];
-			float intensity1 = _effectBillboardAd1 * lerp(0.5, 1.0, level);
-			float intensity2 = _effectBillboardAd2 * smoothstep(level, 0.95 * level, IN.uv_fstTex.y);
-			return color * (intensity1 + intensity2);
-		}
-
 		sampler2D _fstTex;
 		sampler2D _sndTex;
+
+		// No albedo at all
+		fixed4 LightingNoLighting(SurfaceOutput s, fixed3 lightDir, fixed atten) {
+			return float4(0.0, 0.0, 0.0, 0.0);
+		}
+
 		void surf (Input IN, inout SurfaceOutput o) {
-			float3 color = GetAdColor(IN);
-			float anim = fmod(abs((IN.uv_fstTex.y + _move * IN.uv_fstTex.x) * 0.1f), 1.0); // light move animation
-			o.Emission = float3(anim,anim,anim) * color; //GlowAd(IN, color);               // How to get unity property Color??
-			o.Alpha = anim;                                                                // Fade out the tail
-			o.Albedo = float3(0,0,0);                                                      // Emittion only
+			float4 color = lerp(_headLightColor, _stopLightColor, float(IN.uv_fstTex.y > 0.0));
+
+			float anim = 1.0;//fmod(abs((IN.uv_fstTex.y + _move * IN.uv_fstTex.x) * 0.1f), 1.0); // light move animation
+			o.Emission = color.rgb;//0.0*float3(anim,anim,anim) * color.rgb;
+			o.Alpha = color.a * _effectCars * frac(IN.uv_fstTex.y - _move); // Fade out the tail
 		}
 
 		// ---8<--------------------------------------------------------------
