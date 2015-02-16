@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[ExecuteInEditMode]
+// [ExecuteInEditMode]
 public class WorldDeformationText : MonoBehaviour {
 	WorldDeformationParameters parameters;
 
@@ -13,7 +13,7 @@ public class WorldDeformationText : MonoBehaviour {
 	void Start ()
 	{
 		parameters = GameObject.Find("GlobalParameters").GetComponent<WorldDeformationParameters>();
-		position = transform.localPosition;
+		position = transform.position;
 	}
 
 	private const float Tau = 6.2831853f;
@@ -39,8 +39,8 @@ public class WorldDeformationText : MonoBehaviour {
 	Matrix4x4 T(float px, float py, float rate) {
 		Vector3 p = P_torus(px, py, rate);
 
-		Vector3 ux = (P_torus(px + 1.0f, py, rate) - p).normalized;
-		Vector3 uz = (P_torus(px, py + 1.0f, rate) - p).normalized;
+		Vector3 ux = (P_torus(px + 1.0f, py       , rate) - p).normalized;
+		Vector3 uz = (P_torus(px       , py + 1.0f, rate) - p).normalized;
 		Vector3 uy = Vector3.Cross(uz, ux);
 
 		Matrix4x4 t = new Matrix4x4();
