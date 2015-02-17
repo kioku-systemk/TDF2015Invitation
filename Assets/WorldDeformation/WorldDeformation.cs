@@ -10,7 +10,6 @@ public class WorldDeformation : MonoBehaviour {
     }
 
     private void Update() {
-        var m = GetComponent<Renderer>().sharedMaterial;
         Shader.SetGlobalFloat("_vertexTranslation", parameters.vertex_translation);
         Shader.SetGlobalFloat("_vertexLatTranslation", parameters.vertex_lat_translation);
         Shader.SetGlobalFloat("_vertexDeformation", parameters.vertex_deformation);
