@@ -5,21 +5,21 @@ public class TextCreator : MonoBehaviour {
 
 	public static string[] texts = {
 		"Are you interested in generative art?",
-		"Computer graphics?",
-		"Digital music?",
-		"Interactive animation?",
+		"Do you like computer graphics?",
+		"Digital music makes you vibrate?",
+		"Are you a creative mind?",
 		"Do you have plans this weekend?",
-
 		"We invite you to",
-
-
+		"TOKYO DEMO FEST",
+		"2015",
 		"21st, 22nd of February",
-		"at the Institut FranÃ§ais du Japon",
+		"at the Institut Français du Japon",
 		"Iidabashi, Tokyo",
 		"Japan",
 	};
 
 	public GameObject textObject;
+	public GameObject torusTextObject;
 	public Color white = Color.white;
 	public Color red = Color.red;
 
@@ -36,11 +36,20 @@ public class TextCreator : MonoBehaviour {
 	public void ShowText(int i) {
 		Debug.Log("Show text " + i);
 
-		var instance = Instantiate(textObject) as GameObject;
+		if (i < 5) {
+			var instance = Instantiate(textObject) as GameObject;
+			var textMesh = instance.GetComponent<TextMesh>();
+			textMesh.color = white;
+			textMesh.text = texts[i];
+		} else {
+			var instance = Instantiate(torusTextObject) as GameObject;
+			var textMesh = instance.GetComponent<TextMesh>();
 
-		var textMesh = instance.GetComponent<TextMesh>();
-		textMesh.text = texts[i];
-
-		textMesh.color = (i < 5 ? white : red);
+			if (i == 6 || i == 7) {
+				textMesh.characterSize = 2.5f;
+			}
+			textMesh.color = red;
+			textMesh.text = texts[i];
+		}
 	}
 }
