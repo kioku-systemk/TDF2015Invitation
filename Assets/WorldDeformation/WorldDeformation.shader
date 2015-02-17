@@ -4,14 +4,12 @@
 		_maxLength ("Max length", Float) = 1.0
 
 		_fstTex ("1st texture", 2D) = "white" {}
-		_sndTex ("2nd texture", 2D) = "white" {}
 
 		_color ("Main Color", Color) = (1,1,1,1)
 		_neonBlueColor ("Neon blue color", Color) = (1,1,1,1)
 		_neonYellowColor ("Neon yellow color", Color) = (1,1,1,1)
 
 		_effectWindowsLights ("Windows lights", Range(0.0, 1.0)) = 0.0
-		// _effectBillboardAd ("Billboard Ad", Range(0.0, 1.0)) = 0.0
 
 		_torusWaveRate ("Torus Wave rate", Range(0.0, 2.0)) = 0.0
 	}
@@ -46,7 +44,6 @@
 		struct Input {
 			fixed4 color		: COLOR;
 			float2 uv_fstTex	: TEXCOORD0; // We use uv to store barycentric coordinates :)
-			float2 uv2_sndTex	: TEXCOORD1;
 			float3 worldPos;
 		};
 		// Additional values that can be put into Input structure:
@@ -97,7 +94,6 @@
 		uniform float _maxLength;
 
 		uniform float _effectWindowsLights;
-		// uniform float _effectBillboardAd;
 
 		uniform float _torusWaveRate;
 
@@ -194,14 +190,6 @@
 			return frac(sin(dot(uv, float2(12.9898,78.233))) * 43758.5453);
 		}
 
-		float3 DebugUV(Input IN)
-		{
-			float x = (frac(IN.uv_fstTex.x) *
-					   frac(IN.uv_fstTex.y));
-
-			return x * float3(1.0, 0.0, 0.5);
-		}
-
 		float3 Windows(Input IN)
 		{
 			float2 seed = floor(256.0 * IN.color.xy);
@@ -209,7 +197,7 @@
 			float2 windowId = floor(float2(0.5, 1.0) * IN.uv_fstTex) + seed;
 			float hashValue = hash(windowId);
 
-			float3 lightColor = lerp(_neonBlueColor, _neonYellowColor, smoothstep(0.0, 1.0, frac(10.0*hashValue))); // Blue neon or yellow neon
+			float3 lightColor = lerp(_neonBlueColor.rgb, _neonYellowColor.rgb, smoothstep(0.0, 1.0, frac(10.0*hashValue))); // Blue neon or yellow neon
 			float intensity = lerp(0.6, 1.0, clamp(2.0 * hashValue, 0.0, 1.0));
 			float trigger = hashValue * 2.5; // x2 because we don't want everything to be lit
 
@@ -221,12 +209,9 @@
 		}
 
 		sampler2D _fstTex;
-		sampler2D _sndTex;
 		void surf (Input IN, inout SurfaceOutput o) {
-			//o.Emission = DebugUV(IN);
 			o.Emission = Windows(IN);
-			//o.Emission += _spectrum * 0.25;
-			o.Albedo = _color;// * float4(awesomeShaderEffect(IN), 1.0);
+			o.Albedo = _color.rgb;
 		}
 
 		// ---8<--------------------------------------------------------------
