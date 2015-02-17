@@ -190,7 +190,7 @@
 			p.x += fmod(0.5 * _maxWidth + _vertexLatTranslation, _maxWidth) - 0.5 * _maxWidth;
 			p.z += fmod(0.25 * _maxLength + _vertexTranslation, _maxLength);
 
-			p.y *=  (1.0 + _spectrum[0] * v.texcoord.y * _spectrumPosRate); // spectrum pos level
+			//p.y *=  (1.0 + _spectrum[0] * v.texcoord.y * _spectrumPosRate); // spectrum pos level
 			p.y += sin(p.z * 0.05) * _torusWaveRate;
 
 			float4x4 transform = T(p.xz);
