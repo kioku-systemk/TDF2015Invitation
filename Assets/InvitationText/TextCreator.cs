@@ -16,6 +16,19 @@ public class TextCreator : MonoBehaviour {
 		"at the Institut Français du Japon",
 		"Iidabashi, Tokyo",
 		"Japan",
+		"Seminars",
+		"Oculus workshop",
+		"Graphics competition",
+		"Music competition",
+		"Demo competition",
+		"Food and drinks",
+		"Cozy party place",
+		"Live DJ performance",
+		"Lots of friends",
+		"Lots of fun",
+		"And much",
+		"much",
+		"more",
 	};
 
 	public GameObject textObject;

@@ -13,16 +13,16 @@ public class WorldDeformationParameters : MonoBehaviour {
 
 	// ---8<------------------------------------------------------------------
 
-	private GUIStyle debugFont;
+// 	private GUIStyle debugFont;
 
 	void Start () {
-		debugFont = new GUIStyle();
+// 		debugFont = new GUIStyle();
 
-		debugFont.fontSize = 24;
-		debugFont.normal.textColor = Color.yellow;
+// 		debugFont.fontSize = 24;
+// 		debugFont.normal.textColor = Color.yellow;
 	}
 
-	void OnGUI() {
-		GUI.Label(new Rect(100f, 100f, 200f, 100f), Time.time.ToString("F2"), debugFont);
-	}
+// 	void OnGUI() {
+// 		GUI.Label(new Rect(100f, 100f, 200f, 100f), Time.time.ToString("F2"), debugFont);
+// 	}
 }
