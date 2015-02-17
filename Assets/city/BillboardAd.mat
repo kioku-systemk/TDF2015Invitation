@@ -37,6 +37,14 @@ Material:
     m_Floats:
       data:
         first:
+          name: _vertexTranslation
+        second: 0
+      data:
+        first:
+          name: _vertexLatTranslation
+        second: 0
+      data:
+        first:
           name: _vertexDeformation
         second: 0
       data:
@@ -49,19 +57,11 @@ Material:
         second: 1409
       data:
         first:
-          name: _vertexTranslation
-        second: 0
-      data:
-        first:
           name: _effectBillboardAd1
         second: 0
       data:
         first:
           name: _effectBillboardAd2
-        second: 0
-      data:
-        first:
-          name: _vertexLatTranslation
         second: 0
       data:
         first:
@@ -91,6 +91,14 @@ Material:
         first:
           name: _patchLength
         second: 1
+      data:
+        first:
+          name: _spectrumPosRate
+        second: 0
+      data:
+        first:
+          name: _torusWaveRate
+        second: 0
     m_Colors:
       data:
         first:

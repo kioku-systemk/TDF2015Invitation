@@ -16,6 +16,10 @@
 		// _effectEdgeGlow ("Effect edge glow", Range(0.0, 1.0)) = 0.0
 		_effectBillboardAd1 ("Billboard Ad 1", Range(0.0, 1.0)) = 0.0
 		_effectBillboardAd2 ("Billboard Ad 2", Range(0.0, 1.0)) = 0.0
+
+		_torusWaveRate ("Torus Wave rate", Range(0.0, 2.0)) = 0.0
+
+		_spectrumPosRate ("Spectum Position Rate", Range(0.0, 1.0)) = 0.0
 	}
 	SubShader {
 		Tags { "RenderType" = "Opaque" }
@@ -100,10 +104,14 @@
 		uniform float _maxWidth;
 		uniform float _maxLength;
 
+		uniform float _spectrumPosRate;
+
 		// uniform float _effectWindowsLights;
 		// uniform float _effectEdgeGlow;
 		uniform float _effectBillboardAd1;
 		uniform float _effectBillboardAd2;
+
+		uniform float _torusWaveRate;
 
 		float4 _spectrum;
 
@@ -181,6 +189,9 @@
 			float4 p = v.vertex;
 			p.x += fmod(0.5 * _maxWidth + _vertexLatTranslation, _maxWidth) - 0.5 * _maxWidth;
 			p.z += fmod(0.25 * _maxLength + _vertexTranslation, _maxLength);
+
+			p.y *=  (1.0 + _spectrum[0] * v.texcoord.y * _spectrumPosRate); // spectrum pos level
+			p.y += sin(p.z * 0.05) * _torusWaveRate;
 
 			float4x4 transform = T(p.xz);
 			v.vertex = mul(p - float4(p.x, 0.0, p.z, 0.0), transform);

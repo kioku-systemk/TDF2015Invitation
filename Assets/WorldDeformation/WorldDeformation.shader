@@ -12,6 +12,8 @@
 
 		_effectWindowsLights ("Windows lights", Range(0.0, 1.0)) = 0.0
 		// _effectBillboardAd ("Billboard Ad", Range(0.0, 1.0)) = 0.0
+
+		_torusWaveRate ("Torus Wave rate", Range(0.0, 2.0)) = 0.0
 	}
 	SubShader {
 		Tags { "RenderType" = "Opaque" }
@@ -97,6 +99,8 @@
 		uniform float _effectWindowsLights;
 		// uniform float _effectBillboardAd;
 
+		uniform float _torusWaveRate;
+
 		float4 _spectrum;
 
 		// ---8<--------------------------------------------------------------
@@ -119,7 +123,7 @@
 			float r2 = circumpherence2 / TAU;
 
 			float x = (r1 * -sin(theta) + r2) * -cos(phi) + r2;
-			float y = r1 * -cos(theta) + r1;
+			float y =  r1 * -cos(theta) + r1;
 			float z = (r1 * -sin(theta) + r2) * sin(phi);
 
 			return float3(x, y, z);
@@ -173,6 +177,8 @@
 			float4 p = v.vertex;
 			p.x += fmod(0.5 * _maxWidth + _vertexLatTranslation, _maxWidth) - 0.5 * _maxWidth;
 			p.z += fmod(0.25 * _maxLength + _vertexTranslation, _maxLength);
+
+			p.y += sin(p.z * 0.05) * _torusWaveRate;
 
 			float4x4 transform = T(p.xz);
 			v.vertex = mul(p - float4(p.x, 0.0, p.z, 0.0), transform);

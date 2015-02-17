@@ -13,6 +13,7 @@ Properties {
 
 	_move ("light streak move", Float) = 0.0
 
+	_torusWaveRate ("Torus Wave rate", Range(0.0, 2.0)) = 0.0
 }
 SubShader {
 	Pass {
@@ -44,6 +45,8 @@ uniform float _maxLength;
 uniform float _move;
 
 uniform float _effectCars;
+
+uniform float _torusWaveRate;
 
 float4 _spectrum;
 
@@ -129,6 +132,8 @@ v2f vert(appdata_full v)
 	float4 p = v.vertex;
 	p.x += fmod(0.5 * _maxWidth + _vertexLatTranslation, _maxWidth) - 0.5 * _maxWidth;
 	p.z += fmod(0.25 * _maxLength + _vertexTranslation, _maxLength);
+
+	p.y += sin(p.z * 0.05) * _torusWaveRate;
 
 	float4x4 transform = T(p.xz);
 	v.vertex = mul(p - float4(p.x, 0.0, p.z, 0.0), transform);
