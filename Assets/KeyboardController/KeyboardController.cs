@@ -14,7 +14,9 @@ public class KeyboardController : MonoBehaviour {
 
 		if (Input.GetKeyDown(KeyCode.R) ||
 			Input.GetKeyDown(KeyCode.Space)) {
-			OVRManager.display.RecenterPose();
+			if (OVRManager.display != null) {
+				OVRManager.display.RecenterPose();
+			}
 		}
 	}
 }

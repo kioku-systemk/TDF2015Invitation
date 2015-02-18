@@ -27,7 +27,7 @@ AnimationClip:
   m_AnimationClipSettings:
     serializedVersion: 2
     m_StartTime: 0
-    m_StopTime: 154
+    m_StopTime: 155
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -233,8 +233,8 @@ AnimationClip:
     floatParameter: 0
     intParameter: 26
     messageOptions: 0
-  - time: 154
-    functionName: 
+  - time: 155
+    functionName: EndDemo
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

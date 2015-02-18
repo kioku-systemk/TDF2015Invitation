@@ -68,4 +68,20 @@ public class TextCreator : MonoBehaviour {
 			textMesh.text = texts[i];
 		}
 	}
+
+	private bool IsOculusMode()
+	{
+        var oculus = GameObject.Find("OVRCamera");
+		return (oculus != null && oculus.activeInHierarchy == true);
+	}
+
+	void EndDemo() {
+		if (IsOculusMode() == false) {
+			var debugFont = new GUIStyle();
+			debugFont.fontSize = 24;
+			debugFont.normal.textColor = Color.yellow;
+			GUI.Label(new Rect(100f, 100f, 200f, 100f), "BYE", debugFont);
+			Application.Quit();
+		}
+	}
 }
