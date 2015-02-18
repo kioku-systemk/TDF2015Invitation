@@ -1824,6 +1824,10 @@ Prefab:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 11413432, guid: 6ca53a7568ee4134884d87a723b25c98, type: 2}
+      propertyPath: mode
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6ca53a7568ee4134884d87a723b25c98, type: 2}
   m_RootGameObject: {fileID: 1215878993}
@@ -4010,7 +4014,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9aaa3f5f2d574f228e4a21aa38b61e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mode: 2
+  mode: 0
   showGeneratedNormals: 0
   offsetScale: .200000003
   blurRadius: 18
