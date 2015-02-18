@@ -128,96 +128,110 @@ AnimationClip:
     floatParameter: 0
     intParameter: 11
     messageOptions: 0
-  - time: 90.0333328
+  - time: 89.5
     functionName: ShowText
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 12
     messageOptions: 0
-  - time: 92.6666641
+  - time: 92
     functionName: ShowText
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 13
     messageOptions: 0
-  - time: 95.3000031
+  - time: 94.0333328
     functionName: ShowText
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 14
     messageOptions: 0
-  - time: 98.1333313
+  - time: 95.9833298
     functionName: ShowText
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 15
     messageOptions: 0
-  - time: 101.033333
+  - time: 98.0166702
     functionName: ShowText
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 16
     messageOptions: 0
-  - time: 102.550003
+  - time: 100.01667
     functionName: ShowText
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 17
     messageOptions: 0
-  - time: 103.849998
+  - time: 102.01667
     functionName: ShowText
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 18
     messageOptions: 0
-  - time: 104.833336
+  - time: 104
     functionName: ShowText
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 19
     messageOptions: 0
-  - time: 105.783333
+  - time: 105.699997
     functionName: ShowText
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 20
     messageOptions: 0
-  - time: 106.616669
+  - time: 107.183334
     functionName: ShowText
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 21
     messageOptions: 0
-  - time: 107.400002
+  - time: 108.466667
     functionName: ShowText
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 22
     messageOptions: 0
-  - time: 108.166664
+  - time: 109.716667
     functionName: ShowText
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 23
     messageOptions: 0
-  - time: 109.01667
+  - time: 110.966667
     functionName: ShowText
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 24
+    messageOptions: 0
+  - time: 112
+    functionName: ShowText
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 25
+    messageOptions: 0
+  - time: 113
+    functionName: ShowText
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 26
     messageOptions: 0
   - time: 154
     functionName: 

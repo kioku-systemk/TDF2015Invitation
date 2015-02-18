@@ -19,8 +19,11 @@ public class TextCreator : MonoBehaviour {
 		"Seminars",
 		"Oculus workshop",
 		"Graphics competition",
+		"GLSL competition",
 		"Music competition",
+		"Wild competition",
 		"Demo competition",
+
 		"Food and drinks",
 		"Cozy party place",
 		"Live DJ performance",
