@@ -13,7 +13,7 @@ public class TextCreator : MonoBehaviour {
 		"TOKYO DEMO FEST",
 		"2015",
 		"21st, 22nd of February",
-		"at the Institut Français du Japon",
+		"at the Institut Francais du Japon",
 		"Iidabashi, Tokyo",
 		"Japan",
 		"Seminars",
